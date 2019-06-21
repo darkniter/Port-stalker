@@ -144,3 +144,4 @@ dmypy.json
 *.csv
 *.xlsx
 launch.json
+config.py
