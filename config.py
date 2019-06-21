@@ -1,7 +1,0 @@
-CSRF_ENABLED = True
-SECRET_KEY = 'you-will-never-guess'
-DEBUG = True
-MYSQL_DATABASE_USER= 'root'
-MYSQL_DATABASE_PASSWORD = 'root'
-MYSQL_DATABASE_DB = 'EmpData'
-MYSQL_DATABASE_HOST = 'localhost'
