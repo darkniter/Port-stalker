@@ -1,23 +1,24 @@
-from pril import app
-from flask import Markup, render_template, request
+from pril import app, forms, SQLbase
+from flask import Markup, render_template, request, redirect, flash
+
 
 @app.route('/', methods=['GET', 'POST'])
-# @app.route('/hello?name=<name>&control=<control>', methods=['GET', 'POST'])
 def hello(name=None, control=None):
-    # Markup('<strong>Hello %s%s%s!</strong>') % ('<blink>',name,'</blink>')
+    form = forms.Vendor(request.form)
+    ip=''
+    vendor=''
+
     if request.method == 'GET':
-        name = request.args.get('name',name)
-        control = request.args.get('control',control)
-    # Markup('<strong>Hello %s%s%s!</strong>') % ('<blink>',name,'</blink>')
+        return redirect('/login')
 
-    # Markup('<em>Marked up</em> &raquo; HTML').striptags()
 
-    return render_template('main.html', name=name, control= control)
+    return render_template('main.html',form=form, ip=ip, vendor = vendor)
 
 @app.route('/login', methods=['GET', 'POST'])
-def login (param_request = []):
-    # if request.method == 'POST':
-    #     return do_the_login()
-    # else:
-    #     return show_the_login_form()
-    return param_request
+def login ():
+    form = forms.Vendor(request.form)
+    request_rows=[]
+    ip = request.form.get('ip_device')
+    vendor = request.form.get('vendor_device')
+    request_rows = SQLbase.request_SQL(ip,vendor)
+    return render_template('main.html',form=form, ip=ip, vendor = vendor, row = request_rows)

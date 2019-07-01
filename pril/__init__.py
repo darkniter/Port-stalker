@@ -5,4 +5,4 @@ def init_app():
     return app
 
 app = init_app()
-from pril import views,SQLbase
+from pril import forms, views, SQLbase

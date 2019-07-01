@@ -1,14 +1,27 @@
-<!doctype html>
-<title>Hello from Flask</title>
-<body>
-{% if name %}
-  <h1>Hello {{ name }}!</h1>
+{% extends "default.html" %}
+
+{%block content%}
+
+{% if ip %}
+  <h1>Hello {{ ip }}!</h1>
 {% else %}
-  <h1>Hello, World!</h1>
+  <h1>Hello!</h1>
 {% endif %}
-</body>
-<footer>
-{%if control %}
-<h1>Hey ,you did it {{control}}<h1>
+{% if vendor %}
+<h1>Hey ,you did it {{vendor}}<h1>
 {% endif %}
-</footer>
+{% if row %}
+    {% for init in row %}
+      <p>{{init}}</p>
+    {% endfor %}
+  {% endif %}
+{% from "_fieldmacro.html" import render_field %}
+<form method=post>
+  <dl>
+    {{ render_field(form.ip_device) }}
+    {{ render_field(form.vendor_device) }}
+  </dl>
+  <p><input type=submit value=Найти>
+</form>
+
+{% endblock %}
