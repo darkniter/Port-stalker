@@ -15,7 +15,7 @@ def request_SQL(ip,vendor):
 
         if vendor in ['dlink','eltex']:
                 if vendor == 'dlink':
-                        cursor.execute("SELECT DISTINCT login, mac, circuit_id, CAST(SUBSTRING_INDEX(circuit_id, '::', -1) AS UNSIGNED) port, max(`date`) date\
+                        cursor.execute("SELECT DISTINCT login, mac, CAST(SUBSTRING_INDEX(circuit_id, '::', -1) AS UNSIGNED) port, max(`date`) date\
                                         FROM `acc`\
                                         WHERE\
                                         circuit_id LIKE '%%::%s::%%'\
@@ -23,7 +23,7 @@ def request_SQL(ip,vendor):
                                         group by login, circuit_id, port, mac\
                                         ORDER BY port" % ip)
                 if vendor == 'eltex':
-                        cursor.execute("SELECT DISTINCT login, mac, circuit_id, CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(circuit_id, '/', -1), ':', 1) AS UNSIGNED) port, max(`date`) date\
+                        cursor.execute("SELECT DISTINCT login, mac, CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(circuit_id, '/', -1), ':', 1) AS UNSIGNED) port, max(`date`) date\
                                         FROM `acc`\
                                         WHERE\
                                         circuit_id LIKE '%s%%'\
@@ -34,7 +34,8 @@ def request_SQL(ip,vendor):
                 result_rows = cursor.fetchall()
 
                 for row in result_rows:
-                        request_rows.append(row[0])
+                        s = str(row)
+                        request_rows.append(s)
         else:
                 request_rows=[]
 
