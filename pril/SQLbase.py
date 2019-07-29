@@ -5,12 +5,13 @@ mysql = MySQL()
 
 mysql.init_app(app)
 
-conn = mysql.connect()
-cursor = conn.cursor()
+
 
 
 def request_SQL(ip,vendor):
 
+        conn = mysql.connect()
+        cursor = conn.cursor()
         request_rows=[]
 
         if vendor in ['dlink','eltex']:
@@ -34,9 +35,9 @@ def request_SQL(ip,vendor):
                 result_rows = cursor.fetchall()
 
                 for row in result_rows:
-                        s = str(row)
-                        request_rows.append(s)
+                        request_rows.append(row)
         else:
                 request_rows=[]
 
+        cursor.close()
         return request_rows

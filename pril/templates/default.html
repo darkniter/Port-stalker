@@ -1,13 +1,19 @@
 <html>
 	<head>
 		<meta charset=utf-8>
-		<style>
-			@import url("css/style.css");
-        </style>
+		<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
     </head>
 
 	<body>
         <div id='niter'>
+          {% from "_fieldmacro.html" import render_field %}
+          <form method=post>
+            <dl>
+              {{ render_field(form.ip_device) }}
+              {{ render_field(form.vendor_device) }}
+            </dl>
+            <p><input type=submit value=Найти>
+          </form>
           {% block content %}{% endblock %}
         </div>
         </body>

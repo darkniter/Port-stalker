@@ -2,26 +2,41 @@
 
 {%block content%}
 
+
+
 {% if ip %}
-  <h1>Hello {{ ip }}!</h1>
+  <h4> ip device: {{ip}} </h4>
 {% else %}
-  <h1>Hello!</h1>
+  <h4>Hello!</h4>
 {% endif %}
+
 {% if vendor %}
-<h1>Hey ,you did it {{vendor}}<h1>
+<h4>Vendor: {{vendor}}</h4>
 {% endif %}
+
+
 {% if row %}
+<table>
+  <tr>
+      <th>login</th>
+      <th>id</th>
+      <th>port</th>
+      <th>mac</th>
+  </tr>
+  <tbody>
     {% for init in row %}
-      <p>{{init}}</p>
+    <tr>
+      {%for count in init%}
+        <td>{{count}}</td>
+      {%endfor%}
+    </tr>
     {% endfor %}
-  {% endif %}
-{% from "_fieldmacro.html" import render_field %}
-<form method=post>
-  <dl>
-    {{ render_field(form.ip_device) }}
-    {{ render_field(form.vendor_device) }}
-  </dl>
-  <p><input type=submit value=Найти>
-</form>
+  </tbody>
+</table>
+
+{% endif %}
+
+
+
 
 {% endblock %}
