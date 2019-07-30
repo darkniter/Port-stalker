@@ -7,10 +7,11 @@
 	<body>
         <div id='niter'>
           {% from "_fieldmacro.html" import render_field %}
-          <form method=post>
+          <form method="post">
             <dl>
               {{ render_field(form.ip_device) }}
-              {{ render_field(form.vendor_device) }}
+              {# render_field(form.vendor_device) #}
+              {{ render_field(form.list_field) }}
             </dl>
             <p><input type=submit value=Найти>
           </form>
