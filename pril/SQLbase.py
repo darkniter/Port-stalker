@@ -6,17 +6,18 @@ mysql = MySQL()
 mysql.init_app(app)
 
 
+def request_SQL(ip, vendor):
 
+        cursor = mysql.connect().cursor()
 
-def request_SQL(ip,vendor):
+        request_rows = []
 
-        conn = mysql.connect()
-        cursor = conn.cursor()
-        request_rows=[]
-
-        if vendor in ['dlink','eltex']:
+        if vendor in ['dlink', 'eltex']:
                 if vendor == 'dlink':
-                        cursor.execute("SELECT DISTINCT login, mac, CAST(SUBSTRING_INDEX(circuit_id, '::', -1) AS UNSIGNED) port, max(`date`) date\
+                        cursor.execute("SELECT DISTINCT login, mac, \
+                                        CAST(SUBSTRING_INDEX\
+                                        (circuit_id, '::', -1)\
+                                         AS UNSIGNED) port, max(`date`) date\
                                         FROM `acc`\
                                         WHERE\
                                         circuit_id LIKE '%%::%s::%%'\
@@ -24,7 +25,10 @@ def request_SQL(ip,vendor):
                                         group by login, circuit_id, port, mac\
                                         ORDER BY port" % ip)
                 if vendor == 'eltex':
-                        cursor.execute("SELECT DISTINCT login, mac, CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(circuit_id, '/', -1), ':', 1) AS UNSIGNED) port, max(`date`) date\
+                        cursor.execute("SELECT DISTINCT login, mac, \
+                                        CAST(SUBSTRING_INDEX\
+                                        (SUBSTRING_INDEX(circuit_id, '/', -1), ':', 1)\
+                                        AS UNSIGNED) port, max(`date`) date\
                                         FROM `acc`\
                                         WHERE\
                                         circuit_id LIKE '%s%%'\
@@ -37,7 +41,7 @@ def request_SQL(ip,vendor):
                 for row in result_rows:
                         request_rows.append(row)
         else:
-                request_rows=[]
+                request_rows = []
 
         cursor.close()
         return request_rows
