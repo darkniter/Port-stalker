@@ -143,4 +143,4 @@ dmypy.json
 ###Worked
 *.csv
 *.xlsx
-*config*
+*config.py
