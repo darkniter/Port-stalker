@@ -1,5 +1,6 @@
 from flaskext.mysql import MySQL
 from pril import app
+from time import clock
 
 mysql = MySQL()
 
@@ -7,6 +8,8 @@ mysql.init_app(app)
 
 
 def request_SQL(ip, vendor):
+
+        # start=clock()
 
         cursor = mysql.connect().cursor()
 
@@ -44,4 +47,6 @@ def request_SQL(ip, vendor):
                 request_rows = []
 
         cursor.close()
-        return request_rows
+        stop = clock()
+        print('')
+        return request_rows, stop

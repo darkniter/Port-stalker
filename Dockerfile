@@ -11,4 +11,4 @@ COPY . .
 # ENV FLASK_APP microblog.py
 
 EXPOSE 5000
-ENTRYPOINT ["venv/bin/python", "-m", "flask", "run"]
+ENTRYPOINT ["venv/bin/python", "-m", "flask", "run","--host=0.0.0.0"]
