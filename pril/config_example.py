@@ -10,8 +10,8 @@ flask_conf = {
 "TEST_FUCK_VAR" : 'luck',
 }
 
-sql_queries = {
+sql_queries = {"sql" :{
     "dlink": "vla.vla.vla",
     "eltex": "bla bla bla",
     "qtech": "bla-bla-bla",
-}
+}}
