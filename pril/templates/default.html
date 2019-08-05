@@ -8,12 +8,9 @@
         <div id='niter'>
           {% from "_fieldmacro.html" import render_field %}
           <form method="post">
-            <dl>
-              {{ render_field(form.ip_device) }}
-              {# render_field(form.vendor_device) #}
-              {{ render_field(form.list_field) }}
-            </dl>
-            <p><input type=submit value=Найти>
+              ip {{ render_field(form.ip_device) }}
+              vendor {{ render_field(form.list_field) }}
+              <p><input type=submit value=Найти>
           </form>
           {% block content %}{% endblock %}
         </div>
