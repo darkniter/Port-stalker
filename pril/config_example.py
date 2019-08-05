@@ -7,7 +7,6 @@ flask_conf = {
 "MYSQL_DATABASE_PASSWORD" : 'admin',
 "MYSQL_DATABASE_DB" : 'dbname',
 "MYSQL_DATABASE_HOST" : '666.666.666.666',
-"TEST_FUCK_VAR" : 'luck',
 }
 
 sql_queries = {"sql" :{
