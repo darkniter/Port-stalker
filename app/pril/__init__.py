@@ -1,6 +1,6 @@
 from flask import Flask
 from os import path
-from pril import config
+import pril.config as config
 
 def init_app():
     app = Flask(__name__)
