@@ -1,0 +1,9 @@
+version: '3'
+services:
+  darkniter_flask:
+    build: app
+    restart: always
+    ports:
+      - "8080:5000"
+    volumes:
+      - "../ext/config.py:/app/pril/config.py"
