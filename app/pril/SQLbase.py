@@ -28,4 +28,11 @@ def request_SQL(ip, vendor):
         cursor.close()
         stop = timer() - start
 
-        return request_rows, stop
+        header = []
+
+        desc = cursor.description
+
+        for row in desc:
+                header.append(row[0])
+
+        return request_rows, stop, header

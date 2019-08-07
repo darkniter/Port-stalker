@@ -12,10 +12,9 @@
 {% if row %}
 <table>
   <tr>
-      <th>login</th>
-      <th>id</th>
-      <th>port</th>
-      <th>mac</th>
+    {% for head in header_request %}
+      <th>{{head}}</th>
+    {% endfor %}
   </tr>
   <tbody>
     {% for init in row %}

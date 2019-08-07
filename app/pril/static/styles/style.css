@@ -46,6 +46,6 @@ border-top-left-radius: 5px;
 border-bottom-left-radius: 5px;
 }
 tr:hover td{
-background: #71bc78;
-font-weight: bold;
+background: #55779e;
+/* font-weight: bold; */
 }
