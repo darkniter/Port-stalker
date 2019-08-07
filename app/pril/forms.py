@@ -1,5 +1,5 @@
 from wtforms import Form, StringField, validators, SelectField
-
+from pril import config
 
 class Vendor (Form):
     ip_device = StringField('ip_device', [validators.DataRequired(),
@@ -8,6 +8,8 @@ class Vendor (Form):
 
     # vendor_device = StringField('vendor_device', [validators.DataRequired(),\
     # validators.Length(min=5,max=5,message='vendor_name = dlink or eltex')])
+    choices_vendor = [('default',"-")]
+    for vendor in config.sql_queries["sql"]:
+        choices_vendor.append((vendor,str.capitalize(vendor)))
 
-    list_field = SelectField("list_field", choices=[('default', "-"), ('dlink',
-                             "Dlink"), ('eltex', "Eltex")])
+    list_field = SelectField("list_field", choices=choices_vendor)

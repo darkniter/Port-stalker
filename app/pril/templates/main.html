@@ -9,7 +9,7 @@
 
 
 
-{% if row %}
+{% if not(row == []) %}
 <table>
   <tr>
     {% for head in header_request %}
@@ -26,7 +26,8 @@
     {% endfor %}
   </tbody>
 </table>
-
+{% elif header_request %}
+  <h5>Сервер не вернул значений, проверьте правильность введенных данных</h5>
 {% endif %}
 
 
