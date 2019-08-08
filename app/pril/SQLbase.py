@@ -2,7 +2,7 @@ from flaskext.mysql import MySQL
 from pril import app
 from timeit import default_timer as timer
 import redis, json
-
+import datetime
 mysql = MySQL()
 
 mysql.init_app(app)
@@ -21,18 +21,20 @@ def redis_data_output(ip, vendor):
         redis_array = []
 
         redis_string_json = redis_connect.get(hashing(ip, vendor))
-
+        redis_connect.pttl(hashing(ip,vendor))
         if redis_string_json:
                 redis_array = json.loads(redis_string_json)
         if len(redis_array) > 0:
                 header = redis_array[0]
                 request_rows = redis_array[1]
+                print('оставшееся время актуальности данных:', redis_connect.pttl(hashing(ip,vendor))/3600000)
         return request_rows, header
 
 
 def redis_data_input(request_rows, header, ip, vendor):
         redis_array = (header, request_rows)
-        redis_connect.set(hashing(ip, vendor), json.dumps(redis_array))
+        next_day = datetime.datetime.today().replace(day=(datetime.datetime.now().day+1), hour=0, minute=0, second=0, microsecond=0)
+        redis_connect.set(hashing(ip, vendor), json.dumps(redis_array),ex=(next_day-datetime.datetime.now()).seconds)
 
         print ('base update')
 
