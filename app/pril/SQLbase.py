@@ -44,11 +44,12 @@ def request_SQL(ip, vendor):
         request_rows = []
         header = []
 
-        request_rows, header = redis_data_output(ip, vendor)
-
         start = timer()
 
-        if len(header) == 0 :
+        request_rows, header = redis_data_output(ip, vendor)
+
+
+        if  not header:
 
                 cursor = mysql.connect().cursor()
 
@@ -74,5 +75,6 @@ def request_SQL(ip, vendor):
                 header = tuple(header)
                 redis_data_input(request_rows, header, ip, vendor)
         stop = timer() - start
+        stop = float("{0:.4f}".format(stop))
 
         return request_rows, stop, header

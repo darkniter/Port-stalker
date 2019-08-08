@@ -15,7 +15,7 @@ sql_queries = {"sql" :{
     "qtech": "bla-bla-bla",
 }}
 redis_config = {
-        "redis_host" : "127.0.0.1",
+        "redis_host" : "redis",
         "redis_port" : 6379,
         "redis_db" : 0,
         "redis_password" : None
