@@ -8,8 +8,12 @@ class Vendor (Form):
 
     # vendor_device = StringField('vendor_device', [validators.DataRequired(),\
     # validators.Length(min=5,max=5,message='vendor_name = dlink or eltex')])
-    choices_vendor = [('default',"-")]
+    choices_vendor = [('',"-")]
     for vendor in config.sql_queries["sql"]:
         choices_vendor.append((vendor,str.capitalize(vendor)))
 
-    list_field = SelectField("list_field", choices=choices_vendor)
+    list_field = SelectField("list_field",
+                             [validators.DataRequired(),
+                            #  validators.NoneOf('',message="Значение не выбрано")
+                            ],
+                             choices=choices_vendor)

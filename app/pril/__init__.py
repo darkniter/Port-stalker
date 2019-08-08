@@ -6,6 +6,7 @@ def init_app():
     app = Flask(__name__)
     app.config.update(config.sql_queries)
     app.config.update(config.flask_conf)
+    app.config.update(config.redis_config)
     return app
 
 app = init_app()
