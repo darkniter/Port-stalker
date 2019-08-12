@@ -35,10 +35,17 @@ def redis_data_output(ip, vendor, hashing_string):
     return request_rows, header
 
 
+<<<<<<< HEAD
 def redis_data_input(request_rows, header, ip, vendor, hashing_string):
     redis_array = (header, request_rows)
     next_day = datetime.datetime.today().replace(day=(datetime.datetime.now().day+1), hour=app.config.get('EXPIRE_HOUR'), minute=app.config.get('EXPIRE_MINUTE'), second=0, microsecond=0)
     redis_connect.set(hashing_string, json.dumps(redis_array),ex=(next_day-datetime.datetime.now()).seconds)
+=======
+def redis_data_input(request_rows, header, ip, vendor):
+        redis_array = (header, request_rows)
+        next_day = datetime.datetime.today().replace(day=(datetime.datetime.now().day+1), hour=app.config.get('redis_expire_hour'), minute=app.config.get('redis_expire_minute'), second=0, microsecond=0)
+        redis_connect.set(hashing(ip, vendor), json.dumps(redis_array),ex=(next_day-datetime.datetime.now()).seconds)
+>>>>>>> 3f30db2b98dd935e7f98a3e8cbeca39f2ec93093
 
     print ('Redis base update')
 
