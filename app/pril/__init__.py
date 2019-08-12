@@ -4,9 +4,7 @@ from pril import config
 
 def init_app():
     app = Flask(__name__)
-    app.config.update(config.sql_queries)
-    app.config.update(config.flask_conf)
-    app.config.update(config.redis_config)
+    app.config.from_object(config)
     return app
 
 app = init_app()

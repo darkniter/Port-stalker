@@ -1,22 +1,20 @@
+CSRF_ENABLED = True
+SECRET_KEY = 'you-will-never-guess'
+DEBUG = True
+MYSQL_DATABASE_USER = 'Doe_Jhon'
+MYSQL_DATABASE_PASSWORD = 'Riot'
+MYSQL_DATABASE_DB = 'FullPower'
+MYSQL_DATABASE_HOST = '666.666.666.666'
+TEST_FUCK_VAR = 'you'
 
-flask_conf = {
-"CSRF_ENABLED" : True,
-"SECRET_KEY" : 'you-will-never-guess',
-"DEBUG" : True,
-"MYSQL_DATABASE_USER" : 'admin',
-"MYSQL_DATABASE_PASSWORD" : 'admin',
-"MYSQL_DATABASE_DB" : 'dbname',
-"MYSQL_DATABASE_HOST" : '666.666.666.666',
-}
+SQL_REQUEST_DLINK = "bla-bla-bla"
+SQL_REQUEST_ELTEX = "bla-bla-bla"
+SQL_REQUEST_QTECH = "bla-bla-bla"
 
-sql_queries = {"sql" :{
-    "dlink": "vla.vla.vla",
-    "eltex": "bla bla bla",
-    "qtech": "bla-bla-bla",
-}}
-redis_config = {
-        "redis_host" : "redis",
-        "redis_port" : 6379,
-        "redis_db" : 0,
-        "redis_password" : None
-}
+REDIS_HOST = "redis"
+REDIS_PORT = 6379
+REDIS_DB = 0
+REDIS_PASSWORD = None
+
+EXPIRE_HOUR = 7
+EXPIRE_MINUTE = 0
