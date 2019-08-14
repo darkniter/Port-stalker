@@ -1,6 +1,10 @@
 from pril import app, forms, SQLbase
 from flask import render_template, request
+from prometheus_flask_exporter import PrometheusMetrics
 
+metrics = PrometheusMetrics(app)
+
+metrics.info('app_info_test', 'Test metrics lib', version='2')
 
 @app.route('/', methods=['GET', 'POST'])
 def reply():
