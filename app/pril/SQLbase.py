@@ -10,4 +10,6 @@ def request_SQL(ip, vendor):
     request_rows =[('Atest','aaa','aaa','test','testA'),('Btest','bbb','bbb','test','testB'),('Ctest','ccc','ccc','test','testC')]
     stop = timer()
     header=['id','login','mac','port','why not?']
-    return request_rows, stop, header
+    time_flag = True
+
+    return request_rows, stop, header, time_flag
