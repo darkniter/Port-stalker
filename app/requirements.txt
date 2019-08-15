@@ -2,5 +2,6 @@ flask
 wtforms
 flask-mysql
 redis
+prometheus_flask_exporter
 
 
