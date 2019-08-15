@@ -10,7 +10,7 @@ time_db.labels('sql').set(0)
 time_db.labels('redis').set(0)
 
 @app.route('/', methods=['GET', 'POST'])
-@metrics.do_not_track()
+# @metrics.do_not_track()
 @metrics.counter('client_requests', 'Number call init')
 def reply():
 
