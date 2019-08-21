@@ -39,3 +39,7 @@ def reply():
 
     form = forms.Vendor(ip_device=ip, list_field=vendor)
     return render_template('main.html', form=form, time=time, row=request_rows, header_request=header)
+
+@app.route('/xyz')
+def xyz():
+    return "<h1>Do pay</h1>" 404
