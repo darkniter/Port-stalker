@@ -28,16 +28,18 @@ border-top-left-radius: 10px;
 border-top-right-radius: 10px;
 }
 td:nth-child(even) {
-background: #F6D27E;
+background: #d1ab00;
 }
 td:nth-child(odd) {
-background: #D1C7BF;
+background: #ca9400;
 }
 th:nth-child(even)  {
-background: #71bc78;
+background: #000000;
+color: #eec200
 }
 th:nth-child(odd)  {
-background: #8976dd;
+background: #5d387c;
+color: #eec200
 }
 .round-top {
 border-top-left-radius: 5px;
@@ -45,7 +47,15 @@ border-top-left-radius: 5px;
 .round-bottom {
 border-bottom-left-radius: 5px;
 }
-tr:hover td{
-background: #55779e;
-/* font-weight: bold; */
+tr:hover td:nth-child(odd){
+background: #da981d;
+color: #000
+}
+tr:hover td:nth-child(even){
+background: #997f37;
+color: #000;
+}
+tr:hover td:nth-child(3){
+background: #810000;
+color: #fff;
 }

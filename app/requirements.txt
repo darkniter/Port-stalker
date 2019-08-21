@@ -3,5 +3,6 @@ wtforms
 flask-mysql
 redis
 prometheus_flask_exporter
+pytest==3.0.6
 
 
