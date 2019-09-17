@@ -1,6 +1,8 @@
 from pril import app, forms, SQLbase
 from flask import render_template, request
 from prometheus_flask_exporter import PrometheusMetrics, Gauge
+from werkzeug.datastructures import MultiDict
+import json
 
 metrics = PrometheusMetrics(app)
 
@@ -40,6 +42,20 @@ def reply():
     form = forms.Vendor(ip_device=ip, list_field=vendor)
     return render_template('main.html', form=form, time=time, row=request_rows, header_request=header)
 
-@app.route('/xyz')
-def xyz():
-    return "<h1>Do pay</h1>" 404
+
+# @app.route('/api/v1/radius/', methods=['GET'])
+# def radius_api():
+#     # query_arr = request.args(args)
+#     return '200'
+
+
+@app.route('/api/v1/radius/', methods=['GET'])
+def radius_api():
+    response_json = {}
+    ip = request.args.get('ip')
+    vendor = request.args.get('vendor')
+    if ip and vendor:
+        response = SQLbase.request_SQL(ip, vendor)
+        response_json = json.dumps(response[0])
+    return response_json
+

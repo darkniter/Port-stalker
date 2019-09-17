@@ -20,7 +20,7 @@
     {% for init in row %}
     <tr>
       {%for count in init%}
-        <td>{{count}}</td>
+        <td>{{init[count]}}</td>
       {%endfor%}
     </tr>
     {% endfor %}

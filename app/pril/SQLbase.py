@@ -1,4 +1,4 @@
-from flaskext.mysql import MySQL
+from flaskext.mysql import MySQL, pymysql
 from pril import app
 from timeit import default_timer as timer
 import redis, json
@@ -25,8 +25,10 @@ def redis_data_output(ip, vendor, hashing_string):
 
     redis_string_json = redis_connect.get(hashing_string)
     redis_connect.pttl(hashing_string)
+
     if redis_string_json:
         redis_array = json.loads(redis_string_json)
+
     if len(redis_array) > 0:
         header = redis_array[0]
         request_rows = redis_array[1]
@@ -58,7 +60,7 @@ def request_SQL(ip, vendor):
         if  not header:
                 time_flag = True
 
-                cursor = mysql.connect().cursor()
+                cursor = mysql.connect().cursor(pymysql.cursors.DictCursor)
 
                 config_sql = app.config.get_namespace('SQL_REQUEST_')
 
