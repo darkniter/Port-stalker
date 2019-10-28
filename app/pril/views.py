@@ -70,9 +70,13 @@ def reply():
 def radius_api():
     response_json = {}
     ip = request.args.get('ip')
-    vendor = request.args.get('vendor')
-    if ip and vendor:
-        response = SQLbase.request_SQL(ip, vendor)
-        response_json = json.dumps(response[0])
+
+    if ip:
+        device_netbox = get_device(ip)
+        if device_netbox.ip:
+            if device_netbox.device.device_role.slug.find('switch') != -1:
+                response = SQLbase.request_SQL(ip, device_netbox.vendor_name)
+                response_json = json.dumps(response[0])
+
     return response_json
 
