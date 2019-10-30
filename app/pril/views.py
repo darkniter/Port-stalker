@@ -80,3 +80,8 @@ def radius_api():
 
     return response_json
 
+
+@app.route('/add_dev', methods=['GET', 'POST'])
+def add_dev_form():
+    
+    pass
