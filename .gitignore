@@ -17,4 +17,4 @@ __pycache__/
 ignored/
 xml/
 test.py
-vue\client\node_modules\*
+node_modules*
