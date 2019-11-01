@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <!-- <img src="./assets/logo.png"> -->
+    <a href="http://localhost:8080/#/Ping"><img src="./assets/logo.png"></a>
     <router-view/>
   </div>
 </template>

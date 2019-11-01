@@ -1,17 +1,22 @@
 from pril import app, forms, SQLbase
-from flask import render_template, request
+from flask import render_template, request, jsonify
 from prometheus_flask_exporter import PrometheusMetrics, Gauge
-from werkzeug.datastructures import MultiDict
 import json
 import pril.config as config
-from pril.netbox_cli import get_device
+from pril.netbox_cli import get_device,get_regions
+from flask_cors import cross_origin
 
 metrics = PrometheusMetrics(app)
 
 metrics.info('app_info', 'radius web app', version='0.1')
-time_db = Gauge('sql_request_time','The response time from the server sql-base',['database'])
+time_db = Gauge(
+    'sql_request_time',
+    'The response time from the server sql-base',
+    ['database']
+    )
 time_db.labels('sql').set(0)
 time_db.labels('redis').set(0)
+
 
 @app.route('/', methods=['GET', 'POST'])
 # @metrics.do_not_track()
@@ -25,8 +30,6 @@ def reply():
         ip = request.args.get('ip')
     elif request.method == 'POST':
         ip = request.form.get('ip_device')
-
-
 
     if ip:
         device_netbox = get_device(ip)
@@ -43,7 +46,6 @@ def reply():
         time_db.labels('sql').set(time)
     else:
         time_db.labels('redis').set(time)
-
 
     form = forms.Vendor(ip_device=ip)
 
@@ -81,7 +83,17 @@ def radius_api():
     return response_json
 
 
-@app.route('/add_dev', methods=['GET', 'POST'])
+@app.route('/ping', methods=['GET'])
+@cross_origin()
+def ping_pong():
+    return jsonify('Flask bitches!')
+
+
+@app.route('/regions/', methods=['GET', 'POST'])
+@app.route('/regions', methods=['GET', 'POST'])
+@cross_origin()
 def add_dev_form():
-    
-    pass
+    reg_query = request.args.get('q')
+    regions = get_regions(reg_query)
+
+    return jsonify({"regions": regions})

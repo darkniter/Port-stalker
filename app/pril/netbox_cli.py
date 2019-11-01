@@ -20,6 +20,12 @@ class dev_netbox():
                     self.vendor_name = self.vendor.slug
 
 
+class regions_netbox():
+    def __init__(self,obj):
+        self.name = obj.name
+        self.slug = obj.slug
+
+
 @lru_cache(maxsize=40)
 def get_device(address):
     device_obj = dev_netbox(address)
@@ -27,6 +33,17 @@ def get_device(address):
     return device_obj
 
 
-if __name__ == "__main__":
-    print(get_device(address='10.100.0.24'))
+def get_regions(query=''):
+    regions_list = []
+    regions = net_box.dcim.regions.filter(name=query)
 
+    for region in regions:
+        obj = regions_netbox(region)
+        regions_list.append({'slug':obj.slug,'name':obj.name})
+
+    return regions_list
+
+
+if __name__ == "__main__":
+    print(get_regions())
+    print()
