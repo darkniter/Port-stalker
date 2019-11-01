@@ -2,8 +2,12 @@
 
 {%block content%}
 
-
+{% if not access %}
 {%if time%}
+  {%if url_netbox%}
+  <a href="{{url_netbox}}">{{dev_name_netbox}}</a>
+  {{dev_model_netbox}}
+  {% endif %}
 <p> Time request: {{time}} </p>
 {% endif %}
 
@@ -26,10 +30,13 @@
     {% endfor %}
   </tbody>
 </table>
-{% elif header_request %}
-  <h5>Сервер не вернул значений, проверьте правильность введенных данных</h5>
+{% elif form.data['ip_device'] %}
+  <h5>Данные по подключению отсутствуют, проверьте правильность введенных значений или обратитесь к администратору базы<h5>
 {% endif %}
-
+{% elif access %}
+  <h5>Ip не принадлежит типу Switch.
+  <br>access restriction</h5>
+{% endif %}
 
 
 
