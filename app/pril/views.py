@@ -1,7 +1,6 @@
 from pril import app, forms, SQLbase
 from flask import render_template, request
 from prometheus_flask_exporter import PrometheusMetrics, Gauge
-from werkzeug.datastructures import MultiDict
 import json
 import pril.config as config
 from pril.netbox_cli import get_device
@@ -9,9 +8,14 @@ from pril.netbox_cli import get_device
 metrics = PrometheusMetrics(app)
 
 metrics.info('app_info', 'radius web app', version='0.1')
-time_db = Gauge('sql_request_time','The response time from the server sql-base',['database'])
+time_db = Gauge(
+    'sql_request_time',
+    'The response time from the server sql-base',
+    ['database']
+    )
 time_db.labels('sql').set(0)
 time_db.labels('redis').set(0)
+
 
 @app.route('/', methods=['GET', 'POST'])
 # @metrics.do_not_track()
@@ -25,8 +29,6 @@ def reply():
         ip = request.args.get('ip')
     elif request.method == 'POST':
         ip = request.form.get('ip_device')
-
-
 
     if ip:
         device_netbox = get_device(ip)
@@ -43,7 +45,6 @@ def reply():
         time_db.labels('sql').set(time)
     else:
         time_db.labels('redis').set(time)
-
 
     form = forms.Vendor(ip_device=ip)
 
@@ -83,5 +84,5 @@ def radius_api():
 
 @app.route('/add_dev', methods=['GET', 'POST'])
 def add_dev_form():
-    
+
     pass

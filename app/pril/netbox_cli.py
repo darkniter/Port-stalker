@@ -29,4 +29,3 @@ def get_device(address):
 
 if __name__ == "__main__":
     print(get_device(address='10.100.0.24'))
-
