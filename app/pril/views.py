@@ -5,6 +5,8 @@ import json
 import pril.config as config
 from pril.netbox_cli import get_device,get_regions
 from flask_cors import cross_origin
+from pril.slugify import slugify
+from pril.transliteration import transliterate
 
 metrics = PrometheusMetrics(app)
 
@@ -93,7 +95,17 @@ def ping_pong():
 @app.route('/regions', methods=['GET', 'POST'])
 @cross_origin()
 def add_dev_form():
+
     reg_query = request.args.get('q')
-    regions = get_regions(reg_query)
+    regions = get_regions(slugify(transliterate(reg_query)))
 
     return jsonify({"regions": regions})
+
+
+@app.route('/streets/', methods=['GET', 'POST'])
+@cross_origin()
+def street_name():
+    street_query = request.args.get('street')
+    trans_street = transliterate(street_query)
+    street = {'translit': trans_street, 'slug': slugify(trans_street), }
+    return jsonify({"street": street})

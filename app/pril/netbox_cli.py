@@ -33,10 +33,12 @@ def get_device(address):
     return device_obj
 
 
-def get_regions(query=''):
+def get_regions(query=None):
     regions_list = []
-    regions = net_box.dcim.regions.filter(name=query)
-
+    if query:
+        regions = net_box.dcim.regions.filter(query)
+    if query == '' or query is None:
+        regions = net_box.dcim.regions.all()
     for region in regions:
         obj = regions_netbox(region)
         regions_list.append({'slug':obj.slug,'name':obj.name})
