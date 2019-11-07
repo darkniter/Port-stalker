@@ -1,7 +1,10 @@
 import pril.config as config
 # import config
+# import requests
+# import json
 import pynetbox
 from functools import lru_cache
+
 
 net_box = pynetbox.api(config.NETBOX_URL, config.TOKEN)
 
@@ -47,5 +50,5 @@ def get_regions(query=None):
 
 
 if __name__ == "__main__":
-    print(get_regions())
+    # print(getForism())
     print()

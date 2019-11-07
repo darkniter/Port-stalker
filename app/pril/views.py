@@ -7,6 +7,7 @@ from pril.netbox_cli import get_device,get_regions
 from flask_cors import cross_origin
 from pril.slugify import slugify
 from pril.transliteration import transliterate
+import requests
 
 metrics = PrometheusMetrics(app)
 
@@ -97,7 +98,8 @@ def ping_pong():
 def add_dev_form():
 
     reg_query = request.args.get('q')
-    regions = get_regions(slugify(transliterate(reg_query)))
+    reg_query = slugify(transliterate(reg_query))
+    regions = get_regions(reg_query)
 
     return jsonify({"regions": regions})
 
@@ -109,3 +111,10 @@ def street_name():
     trans_street = transliterate(street_query)
     street = {'translit': trans_street, 'slug': slugify(trans_street), }
     return jsonify({"street": street})
+
+@app.route('/forism/', methods=['GET'])
+@cross_origin()
+def getForism():
+    forism = requests.get('http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=ru')
+    response = json.loads(forism.text)
+    return jsonify({"forism": response})
