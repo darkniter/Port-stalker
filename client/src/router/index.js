@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import HelloWorld from '@/components/HelloWorld';
-import Ping from '@/components/Ping';
+import SendForm from '@/components/SendForm';
 import Regions from '@/components/Regions';
 
 Vue.use(Router);
@@ -9,14 +8,9 @@ Vue.use(Router);
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld,
-    },
-    {
-      path: '/Ping',
-      name: 'Ping',
-      component: Ping,
+      path: '/SendForm',
+      name: 'SendForm',
+      component: SendForm,
     },
     {
       path: '/Regions',

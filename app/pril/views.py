@@ -95,7 +95,7 @@ def ping_pong():
 @app.route('/regions/', methods=['GET', 'POST'])
 @app.route('/regions', methods=['GET', 'POST'])
 @cross_origin()
-def add_dev_form():
+def GetRegions():
 
     reg_query = request.args.get('q')
     reg_query = slugify(transliterate(reg_query))
@@ -104,13 +104,27 @@ def add_dev_form():
     return jsonify({"regions": regions})
 
 
+
+@app.route('/regions-child/', methods=['GET', 'POST'])
+@app.route('/regions-child', methods=['GET', 'POST'])
+@cross_origin()
+def GetRegions_child():
+
+    reg_query = request.args.get('q')
+    reg_query = slugify(transliterate(reg_query))
+    regions = get_regions(reg_query, False)
+
+    return jsonify({"regions": regions})
+
+
 @app.route('/streets/', methods=['GET', 'POST'])
 @cross_origin()
-def street_name():
+def GetStreet_name():
     street_query = request.args.get('street')
     trans_street = transliterate(street_query)
     street = {'translit': trans_street, 'slug': slugify(trans_street), }
     return jsonify({"street": street})
+
 
 @app.route('/forism/', methods=['GET'])
 @cross_origin()
@@ -118,3 +132,11 @@ def getForism():
     forism = requests.get('http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=ru')
     response = json.loads(forism.text)
     return jsonify({"forism": response})
+
+
+@app.route('/guestUser/', methods=['GET'])
+@cross_origin()
+def GetGuest():
+    token = config.GUEST_VUE_TOKEN
+    # return jsonify({'token': token})
+    return token

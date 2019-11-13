@@ -1,5 +1,6 @@
 <template>
-  <div class="container">
+  <div id="app" class="container">
+    <a href='http://localhost:8080/#/SendForm' target="_self"><h3>Send_form</h3></a>
     <a class="navbar-brand" href="http://localhost:8080/#/Regions"><img width = "200" src="./assets/logo.png" class="img-responsive" alt="Blockchain"></a>
     <router-view/>
   </div>

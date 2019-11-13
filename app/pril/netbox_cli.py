@@ -24,9 +24,17 @@ class dev_netbox():
 
 
 class regions_netbox():
-    def __init__(self,obj):
+    def __init__(self,obj,parent):
         self.name = obj.name
+        self.id = obj.id
+        if not parent and obj.parent:
+            self.name = obj.parent.name + ': ' + self.name
+
         self.slug = obj.slug
+        if obj.parent:
+            self.parent_code = config.FIAS_CODE.get(obj.parent.slug)
+        else:
+            self.parent_code = None
 
 
 @lru_cache(maxsize=40)
@@ -36,19 +44,31 @@ def get_device(address):
     return device_obj
 
 
-def get_regions(query=None):
+def get_regions(query=None,parent=True):
     regions_list = []
     if query:
         regions = net_box.dcim.regions.filter(query)
+
     if query == '' or query is None:
         regions = net_box.dcim.regions.all()
+
     for region in regions:
-        obj = regions_netbox(region)
-        regions_list.append({'slug':obj.slug,'name':obj.name})
+        obj = regions_netbox(region, parent)
+        if obj.parent_code or parent:
+            regions_list.append({
+                'id': obj.id,
+                'slug': obj.slug,
+                'name': obj.name,
+                'region_code': obj.parent_code
+            })
 
     return regions_list
 
 
 if __name__ == "__main__":
-    # print(getForism())
+    print(get_regions(
+        'M',
+        False
+        )
+    )
     print()
