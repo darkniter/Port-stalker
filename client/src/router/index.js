@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import SendForm from '@/components/SendForm';
+import Ip from '@/components/Ip';
 import Regions from '@/components/Regions';
 
 Vue.use(Router);
@@ -8,9 +8,9 @@ Vue.use(Router);
 export default new Router({
   routes: [
     {
-      path: '/SendForm',
-      name: 'SendForm',
-      component: SendForm,
+      path: '/Ip',
+      name: 'Ip',
+      component: Ip,
     },
     {
       path: '/Regions',

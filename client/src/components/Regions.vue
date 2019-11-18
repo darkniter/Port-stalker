@@ -28,26 +28,27 @@
       </multiselect>
 
       <p v-if="inputStrReg.region_code">
-        <input type='text'  v-model="inputStrPlaces"/>
-        <select v-model="select_house">
+        <input type='text'  v-model="inputStrPlaces" list="select_house"/>
+        <datalist id="select_house">
           <option v-for="(street, index) in StreetsList " v-bind:key="index">{{street.name}}</option>
-        </select>
+        </datalist>
       </p>
       </span>
 
-      <button v-if="inputForm && select_house" v-on:click="onClickOkForm">Show me data</button>
-      <button v-if="!inputForm && select_house" v-on:click="SendNetbox">Send to NetBox</button>
+      <button v-if="inputForm && inputStrPlaces" v-on:click="onClickOkForm">Show me data</button>
     </form>
 
     <br>
 
-    <span v-if="!inputForm && select_house">
+    <div v-if="!inputForm && inputStrPlaces">
       <h3>Object Region:</h3><p>{{inputStrReg}}</p><br>
       <h3>Region Name:</h3><p>{{inputStrReg.name}}</p><br>
       <h3>Selected address:</h3><span>{{inputStrPlaces}}</span><br>
       <br><h3>Translit:</h3><span>{{street.translit}}</span><br>
       <br><h3>Slug:</h3><span>{{street.slug}}</span><br>
-    </span>
+      <span><h4>Do you want to check the Name values?</h4> <button v-on:click="Check">Check it!</button></span><br>
+      <button v-on:click="SendNetbox">Send to NetBox</button>
+    </div>
   </div>
 </template>
 
@@ -55,19 +56,20 @@
 import Multiselect from 'vue-multiselect';
 import axios from 'axios';
 import { yandexMap, ymapMarker } from 'vue-yandex-maps';
-// import SendForm from '../components/SendForm.vue';
 import jsonp from 'jsonp';
+import VueSimpleAlert from "vue-simple-alert";
+import Vue from 'vue';
+
+Vue.use(VueSimpleAlert);
 
 export default {
   components: {
-    // SendForm,
     Multiselect,
     yandexMap,
     ymapMarker
   },
   data() {
     return {
-      select_house:'',
       inputStrPlaces: '',
       StreetsList: [],
       StreetVal: '',
@@ -77,22 +79,102 @@ export default {
       street: {},
       forism: [],
       inputForm: true,
+      NetBoxUrl:'',
       token: '',
-
+      CountCheck: 0,
       NetboxResponse: null,
+      checkSite: true,
     };
   },
+
   methods: {
 
+    RedAlert(Send){
+      this.$alert(Send,'Эх...','error');
+    },
+    YellowPress(Send){
+      this.$alert(Send,'Дважды повторять не буду !!!','warning');
+    },
+    GreenCard(Send){
+      this.$alert(Send,'Ура!','success');
+    },
+
+    Check(){
+      this.checkSite=true;
+      var CheckRequests = {
+      record:`${this.NetBoxUrl}/api/dcim/sites/?slug=${this.street.slug}&name=${this.street.translit}`,
+      name:`${this.NetBoxUrl}/api/dcim/sites/?slug=${this.street.slug}`,
+      slug:`${this.NetBoxUrl}/api/dcim/sites/?name=${this.street.translit}`
+      };
+
+      for (let item in CheckRequests) {
+        let x =+ this.CheckRequest(CheckRequests[item]);
+      }
+      if (x > 0) {
+        this.GreenCard('Все в порядке, отправляйте ;-)');
+      } else {
+        this.RedAlert('Запись находится в Netbox');
+      }
+    },
+
+    CheckRequest(path){
+
+      this.CountCheck+=1;
+
+      axios.get(path,{ headers: { accept: 'application/json', "Content-Type": "application/json", Authorization: `Token ${this.token}`,}})
+        .then((response) =>{
+             let c = response.data.count;
+            return c;
+          })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+
     SendNetbox(){
-      const path = 'http://localhost:5000/regions-child/';
-      axios.get(path, { params: { q: query } })
+      if (this.CountCheck ==0){
+        this.CountCheck+=1;
+        this.YellowPress('Лучше бы вам нажать на чек хоть раз! Но если вы так уверены - отправьте еще раз')
+      } else {
+        const path = `${this.NetBoxUrl}/api/dcim/sites/`;
+
+        const CompleteData = JSON.stringify({
+            name: this.street.translit,
+            slug: this.street.slug,
+            status: 1,
+            region: this.inputStrReg.id
+        });
+
+        axios.post(path, CompleteData, {
+          headers: {
+            accept: 'application/json',
+            "Content-Type": "application/json",
+            Authorization: `Token ${this.token}`,
+          }
+        })
+          .then((res) => {
+            this.NetboxResponse = true;
+            this.GreenCard('Место успешно создано ;-)')
+          })
+          .catch((error) => {
+            for (let item in error.response.data){
+            this.RedAlert(error.response.data[item]);
+            }
+          });
+        }
+        // this.checker = 0;
+    },
+
+    getToken() {
+      const path = 'http://localhost:5000/guestUser/';
+      axios.get(path)
         .then((res) => {
-          console.log(res);
+          this.token = res.data.token;
+          this.NetBoxUrl = res.data.url;
         })
         .catch((error) => {
           console.error(error);
-      });
+        });
     },
 
     onClickOkForm() {
@@ -101,10 +183,12 @@ export default {
     },
     onClickBackForm() {
       this.inputForm = true;
+      // this.checker = 0;
     },
+
     getStreetList(query) {
       const path = 'https://kladr-api.ru/api.php';
-      jsonp( this.UrlBuilder(path, {
+      jsonp(this.UrlBuilder(path, {
                 query: query,
                 cityId: this.inputStrReg.region_code,
                 regionId: 5000000000000,
@@ -112,20 +196,16 @@ export default {
                 contentType: 'building',
                 oneString: 1,
                 callback: 'Fias',
-            },
-      ), { name: 'Fias' }, (error, data) => {
-            if (error) {
-              console.error(error);
-            } else {
-              this.FormatDict(data);
-              console.log(data)
-            }
+                withParent: 1,
+      },), { name: 'Fias'}, (error, data) => {
+              if (error) {
+                console.error(error);
+              } else {
+                  this.FormatDict(data);
+                }
             });
-
-      // console.log('Надо!', res.fias)
-      // this.FormatDict(this.res.result)
-
     },
+
     FormatDict(res){
       console.log('Format',res.result)
       let StreetsList_tmp = [];
@@ -133,29 +213,37 @@ export default {
 
       for (let element in res_tmp) {
         let StreetName = '';
-        StreetName = this.StreetPreProcessor(res_tmp[element].fullName,res_tmp[element].type);
+        StreetName = this.StreetPreProcessor(
+          res_tmp[element]
+        );
+
         StreetsList_tmp.push({name: StreetName});
+
       }
 
       this.StreetsList = StreetsList_tmp;
     },
 
-    StreetPreProcessor(str,type){
-
-      if (type == 'дом') {
-        let result = str.split(',');
-        let  StreetName = result[result.length - 3].split(' ');
-        StreetName.splice(0, 2, " ул. ")
-        StreetName = StreetName.join(' ');
-        console.log ('splice', StreetName)
-        var StreetArr = [' д. ' + result[result.length - 1], StreetName];
+    StreetPreProcessor(element){
+      var StreetArr = '';
+      if (element.type == 'дом') {
+        element.parents.forEach(parent => {
+          if (element.parentGuid === parent.guid){
+            if (parent.typeShort =='ул') {
+            var ParentStr = `${parent.name}`;
+          } else {
+            var ParentStr = `${parent.type} ${parent.name}`;
+          }
+          StreetArr= ` ${ParentStr} ${element.name}`}
+        });
       } else {
-        var StreetArr = str.split(',');
-      }
+          let fullName = element.fullName
+          StreetArr = fullName.split(',');
+          StreetArr.reverse();
+          StreetArr = StreetArr.join(' ')
+        }
 
-      StreetArr.reverse();
-
-      return String(StreetArr);
+      return StreetArr;
     },
 
     UrlBuilder(path, params) {
@@ -192,17 +280,6 @@ export default {
         });
     },
 
-    getToken(){
-      const path = 'http://localhost:5000/guestUser/';
-      axios.get(path)
-        .then((res) => {
-          this.token = res.data;
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    },
-
     getForism() {
       const path = 'http://localhost:5000/forism/';
       axios.get(path)
@@ -225,9 +302,6 @@ export default {
 
     inputStrPlaces() {
       this.getStreetList(this.inputStrPlaces);
-    },
-    select_house() {
-      this.inputStrPlaces = this.select_house;
     },
   },
 

@@ -98,7 +98,9 @@ def ping_pong():
 def GetRegions():
 
     reg_query = request.args.get('q')
-    reg_query = slugify(transliterate(reg_query))
+    if reg_query is not None:
+        reg_query = slugify(transliterate(reg_query))
+        
     regions = get_regions(reg_query)
 
     return jsonify({"regions": regions})
@@ -137,6 +139,4 @@ def getForism():
 @app.route('/guestUser/', methods=['GET'])
 @cross_origin()
 def GetGuest():
-    token = config.GUEST_VUE_TOKEN
-    # return jsonify({'token': token})
-    return token
+    return jsonify({'token': config.GUEST_VUE_TOKEN, 'url': config.NETBOX_URL, })
