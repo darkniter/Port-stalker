@@ -100,35 +100,48 @@ export default {
     },
 
     Check(){
-      this.checkSite=true;
-      var CheckRequests = {
-      record:`${this.NetBoxUrl}/api/dcim/sites/?slug=${this.street.slug}&name=${this.street.translit}`,
-      name:`${this.NetBoxUrl}/api/dcim/sites/?slug=${this.street.slug}`,
-      slug:`${this.NetBoxUrl}/api/dcim/sites/?name=${this.street.translit}`
-      };
+      this.checkSite = true;
+      var CheckRequests = [
+      `${this.NetBoxUrl}/api/dcim/sites/?slug=${this.street.slug}&name=${this.street.translit}`,
+      `${this.NetBoxUrl}/api/dcim/sites/?slug=${this.street.slug}`,
+      `${this.NetBoxUrl}/api/dcim/sites/?name=${this.street.translit}`
+      ];
 
-      for (let item in CheckRequests) {
-        let x =+ this.CheckRequest(CheckRequests[item]);
+      let ControlNumber = true;
+      let RequestsLen = CheckRequests.length;
+
+      while (ControlNumber && RequestsLen) {
+        ControlNumber = this.CheckRequest(CheckRequests[RequestsLen-1]);
+        console.log('ControlNumber', ControlNumber);
+        RequestsLen--;
       }
-      if (x > 0) {
-        this.GreenCard('Все в порядке, отправляйте ;-)');
-      } else {
-        this.RedAlert('Запись находится в Netbox');
-      }
+      this.PostResponse(ControlNumber);
+
     },
 
+    PostResponse(Check) {
+      if (Check) {
+        this.RedAlert('Запись находится в Netbox!')
+      } else {
+        this.GreenCard('Все в порядке, отправляйте в Netbox! ;-)')
+      }
+    },
+    
     CheckRequest(path){
 
       this.CountCheck+=1;
-
+      // (async () => {
       axios.get(path,{ headers: { accept: 'application/json', "Content-Type": "application/json", Authorization: `Token ${this.token}`,}})
-        .then((response) =>{
-             let c = response.data.count;
-            return c;
-          })
-        .catch((error) => {
-          console.error(error);
-        });
+        .then(async(response) => {
+          console.log('resp', response.data.count);
+          var ControlVal = await response.data.count;
+          return ControlVal;
+        })
+            .catch((error) => {
+              console.error(error);
+            });
+            // });
+
     },
 
     SendNetbox(){
