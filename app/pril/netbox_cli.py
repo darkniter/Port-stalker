@@ -56,10 +56,10 @@ def get_regions(query=None,parent=True):
         obj = regions_netbox(region, parent)
         if obj.parent_code or parent:
             regions_list.append({
-                'id': obj.id,
+                'value':{'id': obj.id,
                 'slug': obj.slug,
-                'name': obj.name,
-                'region_code': obj.parent_code
+                'region_code': obj.parent_code},
+                'label': obj.name,
             })
 
     return regions_list

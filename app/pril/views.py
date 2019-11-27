@@ -100,7 +100,7 @@ def GetRegions():
     reg_query = request.args.get('q')
     if reg_query is not None:
         reg_query = slugify(transliterate(reg_query))
-        
+
     regions = get_regions(reg_query)
 
     return jsonify({"regions": regions})
@@ -123,10 +123,11 @@ def GetRegions_child():
 @cross_origin()
 def GetStreet_name():
     street_query = request.args.get('street')
-    trans_street = transliterate(street_query)
-    street = {'translit': trans_street, 'slug': slugify(trans_street), }
-    return jsonify({"street": street})
-
+    if street_query:
+        trans_street = transliterate(street_query)
+        street = {'translit': trans_street, 'slug': slugify(trans_street), }
+        return jsonify({"street": street})
+    else: return 'error value is None type'
 
 @app.route('/forism/', methods=['GET'])
 @cross_origin()

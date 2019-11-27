@@ -22,12 +22,12 @@
       :limit="3"
       placeholder="Pick a value"
       :preserveSearch="true"
-      label="name"
-      track-by="name"
+      label="label"
+      track-by="value"
       @search-change="getRegions">
       </multiselect>
 
-      <p v-if="inputStrReg.region_code">
+      <p v-if="inputStrReg.label">
         <input type='text'  v-model="inputStrPlaces" list="select_house"/>
         <datalist id="select_house">
           <option v-for="(street, index) in StreetsList " v-bind:key="index">{{street.name}}</option>
@@ -42,7 +42,7 @@
 
     <div v-if="!inputForm && inputStrPlaces">
       <h3>Object Region:</h3><p>{{inputStrReg}}</p><br>
-      <h3>Region Name:</h3><p>{{inputStrReg.name}}</p><br>
+      <h3>Region Name:</h3><p>{{inputStrReg.label}}</p><br>
       <h3>Selected address:</h3><span>{{inputStrPlaces}}</span><br>
       <br><h3>Translit:</h3><span>{{street.translit}}</span><br>
       <br><h3>Slug:</h3><span>{{street.slug}}</span><br>
@@ -126,7 +126,7 @@ export default {
         this.GreenCard('Все в порядке, отправляйте в Netbox! ;-)')
       }
     },
-    
+
     CheckRequest(path){
 
       this.CountCheck+=1;
@@ -155,7 +155,7 @@ export default {
             name: this.street.translit,
             slug: this.street.slug,
             status: 1,
-            region: this.inputStrReg.id
+            region: this.inputStrReg.value.id
         });
 
         axios.post(path, CompleteData, {
@@ -203,7 +203,7 @@ export default {
       const path = 'https://kladr-api.ru/api.php';
       jsonp(this.UrlBuilder(path, {
                 query: query,
-                cityId: this.inputStrReg.region_code,
+                cityId: this.inputStrReg.value.region_code,
                 regionId: 5000000000000,
                 limit: 10,
                 contentType: 'building',
