@@ -4,8 +4,6 @@ import axios from 'axios';
 import jsonp from 'jsonp';
 import Logo from './Helper';
 import Select from 'react-select';
-import { thisExpression } from '@babel/types';
-
 
 
 class AppD extends React.Component {
@@ -15,7 +13,7 @@ class AppD extends React.Component {
     super(props)
 
     this.state = {
-      inputStrPlaces: {},
+      inputStrPlaces: '',
       StreetsList: [],
       StreetVal: '',
       inputStrReg: {},
@@ -40,6 +38,7 @@ class AppD extends React.Component {
     this.ReverseStateForm = this.ReverseStateForm.bind(this)
     this.AfterInput = this.AfterInput.bind(this)
     this.SendNetbox = this.SendNetbox.bind(this)
+    this.Select_tmp = this.Select_tmp.bind(this)
 
     axios.get('http://localhost:5000/forism/')
       .then((res) => {
@@ -98,7 +97,11 @@ class AppD extends React.Component {
         });
   }
 
-  getStreetList(q){
+  getStreetList= event=>{
+    let q = event.target.value
+    this.setState({
+      inputStrPlaces: q,
+    })
     if (q){
     const path = 'https://kladr-api.ru/api.php';
     jsonp(this.UrlBuilder(path, {
@@ -157,9 +160,7 @@ class AppD extends React.Component {
     if (element.type === 'дом') {
       element.parents.forEach(parent => {
         if (element.parentGuid === parent.guid){
-          if (parent.typeShort ==='ул') {
             StreetArr = `${parent.typeShort}. ${parent.name} ${element.name}`
-          }
         }
 
       });
@@ -190,8 +191,9 @@ class AppD extends React.Component {
 
   onSelectStreet(e){
     this.setState({
-      inputStrPlaces: e.value
+      inputStrPlaces: e.value,
     })
+
 
     const path = 'http://localhost:5000/streets/';
     axios.get(path, { params: { street:  e.value} })
@@ -202,6 +204,7 @@ class AppD extends React.Component {
         console.error(error);
       });
   }
+
 
   ReturnForism(){
     if(this.state.inputForm){
@@ -223,21 +226,79 @@ class AppD extends React.Component {
     this.setState({inputForm:(!this.state.inputForm)})
   }
 
+  ChekSelect(){
+    console.log(this.state.inputStrPlaces)
+    return false
+  }
+
+  Select_tmp (){
+    return( <div>
+
+
+            </div>
+    );
+  }
+
   ReturnStreetsList(){
+
     if (this.state.inputStrReg.label && this.state.inputForm) {
-      if (this.state.street){
+      if (this.state.street.slug){
         return(
           <div>
-              <h3>Site : </h3>
-              <Select options={this.state.StreetsList} onInputChange={this.getStreetList} onChange={this.onSelectStreet}></Select>
-              <input type="button" value="Show me data" onClick={this.ReverseStateForm}/>
+            <label for="inputSearch">Search Site : </label>
+              <div className="input-group mb-3">
+                <input
+                  id="inputSearch"
+                  className="form-control"
+                  type="text"
+                  value={this.state.inputStrPlaces}
+                  onChange={this.getStreetList}
+                />
+              </div>
+
+            <div className="input-group-append">
+              <input type="button" className="btn btn-outline-secondary" value="Show me data" onClick={this.ReverseStateForm}/>
+            </div>
+
+              <div>
+                <label for="SelectStreetFIAS">Site in Kladr : </label>
+                  <Select
+                    id = "SelectStreetFIAS"
+                    menuIsOpen={true}
+                    isSearchable={false}
+                    options = {this.state.StreetsList}
+                    onChange = {this.onSelectStreet}
+                    maxMenuHeight='200'
+                  />
+              </div>
+
           </div>
       );
       } else {
           return(
             <div>
-                <h3>Site : </h3>
-                <Select options={this.state.StreetsList} onInputChange={this.getStreetList} onChange={this.onSelectStreet}></Select>
+              <label for="inputSearch">Search Site : </label>
+              <div className="input-group mb-3">
+                <input
+                  id="inputSearch"
+                  className="form-control"
+                  type="text"
+                  value={this.state.inputStrPlaces}
+                  onChange={this.getStreetList}
+                />
+              </div>
+
+              <div>
+                <label for="SelectStreetFIAS">Site in Kladr : </label>
+                  <Select
+                    id = "SelectStreetFIAS"
+                    menuIsOpen={true}
+                    isSearchable={false}
+                    options = {this.state.StreetsList}
+                    onChange = {this.onSelectStreet}
+                    maxMenuHeight='200'
+                  />
+              </div>
             </div>
           );
       }
@@ -250,8 +311,7 @@ class AppD extends React.Component {
     if(this.state.inputForm){
       return(
       <div>
-        <h3>Region : </h3>
-        <Select options={this.state.allRegions} onChange={this.onSelectRegion}></Select>
+        <label htmlFor="SelectReg">Region : </label><Select maxMenuHeight='200' id="SelectReg" options={this.state.allRegions} onChange={this.onSelectRegion}></Select>
       </div>
       )} else {
         return '';
@@ -262,21 +322,29 @@ class AppD extends React.Component {
     if (!this.state.inputForm){
       return (
         <div>
-          <input type='button' value='Back to form' onClick={this.ReverseStateForm} />
-            <h3>Object Region:</h3>
-              <div>
+
+            <h3>Created Object : </h3>
+            <table className="col-md-6 table-striped">
+              <tbody>
+                <tr><td>Region Name :</td><td> {this.state.inputStrReg.label}</td></tr>
+                <tr><td>Selected address : </td><td>{this.state.inputStrPlaces}</td></tr>
+                <tr><td>Translit : </td><td>{this.state.street.translit}</td></tr>
+                <tr><td>Slug : </td><td>{this.state.street.slug}</td></tr>
+              </tbody>
+            </table>
+            <br></br>
+            <div>
+                <h3>Region: </h3>
+                <table className="col-md-6 table-striped"><tbody>
                 {
                   Object.keys(this.state.inputStrReg.value).map((item)=>{
-                        return <h5 key={item}> {this.state.inputStrReg.value[item]} </h5>
+                        return <tr key={item}><td>{String(item)} :</td><td> {this.state.inputStrReg.value[item]} </td></tr>
                       })
-                }
-              </div>
-            <br></br>
-            <h3>Region Name:</h3><p>{this.state.inputStrReg.label}</p><br></br>
-            <h3>Selected address:</h3><span>{this.state.inputStrPlaces}</span><br></br>
-            <br></br><h3>Translit:</h3><span>{this.state.street.translit}</span><br></br>
-            <br></br><h3>Slug:</h3><span>{this.state.street.slug}</span><br></br>
-          <input type='button' value='Send to NetBox' onClick={this.SendNetbox} />
+                }</tbody></table>
+            </div>
+            <br/>
+            <input type='button' className="btn btn-dark" value='Back to form' onClick={this.ReverseStateForm} />
+          <input type='button' className="btn btn-danger" value='Send to NetBox' onClick={this.SendNetbox} />
         </div>
       );
     } else {
@@ -290,13 +358,19 @@ class AppD extends React.Component {
 
   render(){
         return(
-          <div>
+          <div >
+
+            <div>
             <Logo/>
-            <this.AfterInput/>
             <this.ReturnForism/>
-            <this.ReturnRegions/>
-            <this.ReturnStreetsList/>
-            <this.ReturnInfo/>
+
+            </div>
+            <div className="col-md-6" align="left">
+              <this.ReturnRegions/>
+              <this.ReturnStreetsList/>
+              <this.ReturnInfo/>
+            </div>
+            <this.AfterInput/>
           </div>
 
         );
