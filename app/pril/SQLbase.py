@@ -45,6 +45,7 @@ def redis_data_output(ip, vendor, hashing_string):
 def redis_data_input(request_rows, header, ip, vendor, hashing_string):
     redis_array = (header, request_rows)
     next_day = (
+
         datetime.datetime.today() +
         datetime.timedelta(days=1)).replace(
             hour=app.config.get('EXPIRE_HOUR'),
@@ -95,7 +96,13 @@ def request_SQL(ip, vendor):
                 header.append(row[0])
         header = tuple(header)
         if len(request_rows) > 0:
-            redis_data_input(request_rows, header, ip, vendor, hashing_string)
+            redis_data_input(
+                request_rows,
+                header,
+                ip,
+                vendor,
+                hashing_string
+                )
     stop = timer() - start
     stop = float("{0:.4f}".format(stop))
 

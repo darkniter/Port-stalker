@@ -6,7 +6,7 @@ services:
     ports:
       - "8080:5000"
     volumes:
-      - "./config.py:/app/pril/config.py"
+      - "./config.py-example:/app/pril/config.py"
   redis:
     image: redis
     restart: always

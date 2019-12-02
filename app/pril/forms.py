@@ -1,6 +1,7 @@
 from wtforms import Form, StringField, validators, SelectField
 from pril import app
 
+
 class Vendor (Form):
     ip_device = StringField('ip_device', [validators.DataRequired(),
                             validators.Length(min=7, max=15, message='format\

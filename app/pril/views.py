@@ -141,3 +141,4 @@ def getForism():
 @cross_origin()
 def GetGuest():
     return jsonify({'token': config.GUEST_VUE_TOKEN, 'url': config.NETBOX_URL, })
+

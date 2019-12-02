@@ -66,9 +66,4 @@ def get_regions(query=None,parent=True):
 
 
 if __name__ == "__main__":
-    print(get_regions(
-        'M',
-        False
-        )
-    )
-    print()
+  print()
