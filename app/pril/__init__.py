@@ -2,6 +2,7 @@ from flask import Flask
 from pril import config
 
 
+
 def init_app():
     app = Flask(__name__)
     app.config.from_object(config)
