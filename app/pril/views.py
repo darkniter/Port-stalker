@@ -1,9 +1,13 @@
 from pril import app, forms, SQLbase
-from flask import render_template, request
+from flask import render_template, request, jsonify
 from prometheus_flask_exporter import PrometheusMetrics, Gauge
 import json
 import pril.config as config
-from pril.netbox_cli import get_device
+from pril.netbox_cli import get_device,get_regions
+from flask_cors import cross_origin
+from pril.slugify import slugify
+from pril.transliteration import transliterate
+import requests
 
 metrics = PrometheusMetrics(app)
 
@@ -82,7 +86,59 @@ def radius_api():
     return response_json
 
 
-@app.route('/add_dev', methods=['GET', 'POST'])
-def add_dev_form():
+@app.route('/ping', methods=['GET'])
+@cross_origin()
+def ping_pong():
+    return jsonify('Flask bitches!')
 
-    pass
+
+@app.route('/regions/', methods=['GET', 'POST'])
+@app.route('/regions', methods=['GET', 'POST'])
+@cross_origin()
+def GetRegions():
+
+    reg_query = request.args.get('q')
+    if reg_query is not None:
+        reg_query = slugify(transliterate(reg_query))
+
+    regions = get_regions(reg_query)
+
+    return jsonify({"regions": regions})
+
+
+
+@app.route('/regions-child/', methods=['GET', 'POST'])
+@app.route('/regions-child', methods=['GET', 'POST'])
+@cross_origin()
+def GetRegions_child():
+
+    reg_query = request.args.get('q')
+    reg_query = slugify(transliterate(reg_query))
+    regions = get_regions(reg_query, False)
+
+    return jsonify({"regions": regions})
+
+
+@app.route('/streets/', methods=['GET', 'POST'])
+@cross_origin()
+def GetStreet_name():
+    street_query = request.args.get('street')
+    if street_query:
+        trans_street = transliterate(street_query)
+        street = {'translit': trans_street, 'slug': slugify(trans_street), }
+        return jsonify({"street": street})
+    else: return 'error value is None type'
+
+@app.route('/forism/', methods=['GET'])
+@cross_origin()
+def getForism():
+    forism = requests.get('http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=ru')
+    response = json.loads(forism.text)
+    return jsonify({"forism": response})
+
+
+@app.route('/guestUser/', methods=['GET'])
+@cross_origin()
+def GetGuest():
+    return jsonify({'token': config.GUEST_VUE_TOKEN, 'url': config.NETBOX_URL, })
+

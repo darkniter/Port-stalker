@@ -36,7 +36,7 @@ def redis_data_output(ip, vendor, hashing_string):
         if not(app.config.get('ENV') == 'production'):
             print({
                 'ip': ip,
-                ' vendor': vendor,
+                'vendor': vendor,
                 ' ttl': redis_connect.pttl(hashing_string)/3600000
                 })
     return request_rows, header
@@ -45,13 +45,14 @@ def redis_data_output(ip, vendor, hashing_string):
 def redis_data_input(request_rows, header, ip, vendor, hashing_string):
     redis_array = (header, request_rows)
     next_day = (
-                datetime.datetime.today() +
-                datetime.timedelta(days=1)).replace(
-                    hour=app.config.get('EXPIRE_HOUR'),
-                    minute=app.config.get('EXPIRE_MINUTE'),
-                    second=0,
-                    microsecond=0
-                )
+
+        datetime.datetime.today() +
+        datetime.timedelta(days=1)).replace(
+            hour=app.config.get('EXPIRE_HOUR'),
+            minute=app.config.get('EXPIRE_MINUTE'),
+            second=0,
+            microsecond=0
+            )
     redis_connect.set(
         hashing_string,
         json.dumps(redis_array),
