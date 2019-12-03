@@ -1,47 +1,51 @@
-import logo from './assets/logo.png';
-import fireBox from './assets/fireBox.png'
-import Stalker from './assets/Stalker.png'
+import logo from './assets/n_logo.png';
+import fireBox from './assets/n_firebox.png';
+import Stalker from './assets/n_stalker.png';
+import eye from './assets/bullseye.svg';
 import React from 'react';
 
 function Logo(){
-return (<div>
+return (
 
-          <div width = {document.documentElement.clientWidth} className="container">
-            <div className="btn-group btn-group-justified " role="group" >
-
+              <div className="navbar navbar-default navbar-fixed-top">
+              {/* <div className="row" > */}
+                {/* <div className="navbar-collapse collapse in"> */}
+              <div className="nav navbar-nav">
+                <div class="btn-group" role="group">
                 <a href='http://172.18.29.49:3000/'>
-                  <button width = {document.documentElement.clientWidth}  type="button" className="btn btn-dark" aria-label="Left Align">
-                    <img width="50" alt="logo" src={logo} />
+                  <button  type="button" className="btn btn-dark btn-secondary" aria-label="Left Align">
+                    <img  className = "menu" alt="logo" src={logo} />
                     Home
                 </button>
                 </a>
 
-
                 <a href='http://172.18.29.49:3000/'>
-                    <button type="button" className="btn btn-dark col-sm" aria-label="Left Align">
-                      <img width="50" alt="fireBox" src={fireBox} />
+                    <button type="button" className="btn btn-dark btn-secondary" aria-label="Left Align">
+                      <img className = "menu" alt="fireBox" src={fireBox} />
                       NetBox
                    </button>
                 </a>
 
-
                 <a href='http://172.18.29.49:3000/'>
-                  <button type="button" className="btn btn-dark col-sm" aria-label="Left Align">
-                    <img width="50" alt="Stalker" src={Stalker} />
+                  <button type="button" className="btn btn-dark btn-secondary" aria-label="Left Align">
+                    <img  className = "menu" alt="Stalker" src={Stalker} />
                       Port-Stalker
                   </button>
                 </a>
-
-                <a href='http://172.18.29.49:3000/'>
-                  <button width="50" type="button" className="btn btn-dark col-sm" aria-label="Left Align">
-
-                    Log In
-                </button>
-                </a>
               </div>
-            </div>
+              </div>
 
-        </div>);
+              <div className="nav navbar-nav navbar-right">
+                  <a href='http://172.18.29.49:3000/'>
+                    <button width="50"  type="button" className="btn btn-danger col-sm" aria-label="Left Align">
+                      <img src={eye} width="32" height="32" title="Bootstrap"/>
+                      Log In
+                    </button>
+                  </a>
+          </div>
+          {/* </div> */}
+        {/* </div> */}
+      </div>);
 }
 
 export default Logo

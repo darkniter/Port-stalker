@@ -362,15 +362,19 @@ class AppD extends React.Component {
 
             <div>
             <Logo/>
-            <this.ReturnForism/>
-
             </div>
+            <div align="center ">
+            <this.ReturnForism/>
+            </div>
+
             <div className="col-md-6" align="left">
               <this.ReturnRegions/>
               <this.ReturnStreetsList/>
               <this.ReturnInfo/>
             </div>
+            <div>
             <this.AfterInput/>
+            </div>
           </div>
 
         );
