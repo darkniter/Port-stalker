@@ -8,7 +8,7 @@ function Header(){
 const NotDone=()=>{return(alert('In the work, please stay with us !'))}
 return (
 
-              <div className="navbar navbar-default navbar-fixed-top">
+              <nav className="navbar navbar-default navbar-fixed-top">
               {/* <div className="row" > */}
                 {/* <div className="navbar-collapse collapse in"> */}
               <div className ="nav navbar-nav">
@@ -27,26 +27,26 @@ return (
                    </button>
                 </a>
 
-                
+
                   <button type="button" className="btn btn-dark btn-secondary" aria-label="Left Align" onClick={NotDone}>
                     <img  className = "menu" alt="Stalker" src={Stalker} />
                       Port-Stalker
                   </button>
-                
+
               </div>
               </div>
 
               <div className="nav navbar-nav navbar-right">
-                  
+
                     <button width="50"  type="button" className="btn btn-danger col-sm" aria-label="Left Align" onClick={NotDone}>
                       <img src={eye} alt="bullseye" width="32" height="32" title="Bootstrap"/>
                       Log In
                     </button>
-                  
+
           </div>
           {/* </div> */}
         {/* </div> */}
-      </div>);
+      </nav>);
 
 }
 export default Header

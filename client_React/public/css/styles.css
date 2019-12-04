@@ -1,6 +1,37 @@
-body {
+/* body {
     /* padding-top: 170px; */
-}
+/* } */
 img.menu{
     width:40;
+}
+.wrapper.NetBox {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: margin .5s;
+    margin: 0 0 0 -250px;
+}
+.nav.NetBox {
+    position: relative;
+    width: 250px;
+    height: 20px;
+    padding: 20px;
+    border-right: 1px solid #ccc;
+}
+.wrapper.NetBox.is-nav-open {
+    margin-left: 0;
+}
+
+.nav_button.NetBox {
+    position: absolute;
+    top: 0;
+    right: -60px;
+    padding: 20px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: color .3s;
+}
+
+.nav_button.NetBox:hover {
+    color: #5eb2ff;
 }

@@ -3,12 +3,12 @@ import React from 'react';
 import axios from 'axios';
 import jsonp from 'jsonp';
 
-class AppRouted extends React.Component {
+class AddSite extends React.Component {
 
     constructor(props){
-  
+
       super(props)
-  
+
       this.state = {
         inputStrPlaces: '',
         StreetsList: [],
@@ -16,7 +16,7 @@ class AppRouted extends React.Component {
         inputStrReg: {},
         allRegions:{},
         street: {},
-        
+
         inputForm: true,
         CountCheck: 0,
         NetboxResponse: null,
@@ -24,21 +24,21 @@ class AppRouted extends React.Component {
         token:'',
         NetBox_URL:'',
       };
-  
+
       this.onSelectStreet = this.onSelectStreet.bind(this)
       this.onSelectRegion = this.onSelectRegion.bind(this)
       this.ReturnStreetsList = this.ReturnStreetsList.bind(this)
       this.getStreetList = this.getStreetList.bind(this)
-      
+
       this.ReturnRegions = this.ReturnRegions.bind(this)
       this.SendNetbox = this.SendNetbox.bind(this)
       this.ReverseStateForm = this.ReverseStateForm.bind(this)
       this.AfterInput = this.AfterInput.bind(this)
       this.SendNetbox = this.SendNetbox.bind(this)
       this.Select_tmp = this.Select_tmp.bind(this)
-  
-      
-  
+
+
+
       axios.get('http://localhost:5000/guestUser/')
         .then((res)=>{
           this.setState({
@@ -50,18 +50,18 @@ class AppRouted extends React.Component {
         });
         this.RegionLoad()
     }
-  
+
     SendNetbox(){
-  
+
         const path = `${this.state.NetBox_URL}/api/dcim/sites/`;
-  
+
         const CompleteData = JSON.stringify({
             name: this.state.street.translit,
             slug: this.state.street.slug,
             status: 1,
             region: this.state.inputStrReg.id
         });
-  
+
         axios.post(path, CompleteData, {
           headers: {
             accept: 'application/json',
@@ -85,8 +85,8 @@ class AppRouted extends React.Component {
               }
           });
     }
-  
-    getStreetList= event=>{
+
+    getStreetList = event =>{
       let q = event.target.value
       this.setState({
         inputStrPlaces: q,
@@ -111,39 +111,39 @@ class AppRouted extends React.Component {
             });
       }
       }
-  
+
     UrlBuilder(path, params) {
         let UrlString = '';
-  
+
         for (const element in params) {
           UrlString += String('&'+ element + '=' + params[element]);
         }
-  
+
         UrlString = UrlString.replace('&', '?');
-  
+
         return path + UrlString;
     }
-  
+
     FormatDict(res){
       let StreetsList_tmp = [];
       var res_tmp = res.result;
-  
+
       for (let element in res_tmp) {
         let StreetName = '';
         StreetName = this.StreetPreProcessor(
           res_tmp[element]
         );
-  
+
         StreetsList_tmp.push({value: StreetName, label: StreetName});
-  
+
       }
-  
+
       this.setState({
         StreetsList: StreetsList_tmp
       })
-  
+
     }
-  
+
     StreetPreProcessor(element){
       var StreetArr = '';
       if (element.type === 'дом') {
@@ -151,15 +151,15 @@ class AppRouted extends React.Component {
           if (element.parentGuid === parent.guid){
               StreetArr = `${parent.typeShort}. ${parent.name} ${element.name}`
           }
-  
+
         });
       } else {
           StreetArr = `${element.typeShort}. ${element.name}`
         }
-  
+
       return StreetArr;
     }
-  
+
     RegionLoad(){
       axios.get('http://localhost:5000/regions-child/', { params: { q:''} })
         .then((res) => {
@@ -174,19 +174,19 @@ class AppRouted extends React.Component {
           console.error(error);
         });
     }
-  
+
     onSelectRegion (e){
       this.setState({
         inputStrReg: e
       })
     }
-  
+
     onSelectStreet(e){
       this.setState({
         inputStrPlaces: e.value,
       })
-  
-  
+
+
       const path = 'http://localhost:5000/streets/';
       axios.get(path, { params: { street:  e.value} })
         .then((res) => {
@@ -196,26 +196,26 @@ class AppRouted extends React.Component {
           console.error(error);
         });
     }
-  
+
     ReverseStateForm(){
       this.setState({inputForm:(!this.state.inputForm)})
     }
-  
+
     ChekSelect(){
       console.log(this.state.inputStrPlaces)
       return false
     }
-  
+
     Select_tmp (){
       return( <div>
-  
-  
+
+
               </div>
       );
     }
-  
+
     ReturnStreetsList(){
-  
+
       if (this.state.inputStrReg.label && this.state.inputForm) {
         if (this.state.street.slug){
           return(
@@ -230,23 +230,24 @@ class AppRouted extends React.Component {
                     onChange={this.getStreetList}
                   />
                 </div>
-  
+
               <div className="input-group-append">
                 <input type="button" className="btn btn-outline-secondary" value="Show me data" onClick={this.ReverseStateForm}/>
               </div>
-  
+
                 <div>
                   <label for="SelectStreetFIAS">Site in Kladr : </label>
                     <Select
                       id = "SelectStreetFIAS"
-                      menuIsOpen={true}
+                      defaultMenuIsOpen={true}
+                      closeMenuOnSelect={true}
                       isSearchable={false}
                       options = {this.state.StreetsList}
                       onChange = {this.onSelectStreet}
                       maxMenuHeight='200'
                     />
                 </div>
-  
+
             </div>
         );
         } else {
@@ -262,7 +263,7 @@ class AppRouted extends React.Component {
                     onChange={this.getStreetList}
                   />
                 </div>
-  
+
                 <div>
                   <label for="SelectStreetFIAS">Site in Kladr : </label>
                     <Select
@@ -281,7 +282,7 @@ class AppRouted extends React.Component {
         return '';
         }
     }
-  
+
     ReturnRegions(){
       if(this.state.inputForm){
         return(
@@ -292,12 +293,12 @@ class AppRouted extends React.Component {
           return '';
         }
     }
-  
+
     AfterInput(){
       if (!this.state.inputForm){
         return (
           <div>
-  
+
               <h3>Created Object : </h3>
               <table className="col-md-6 table-striped">
                 <tbody>
@@ -326,11 +327,11 @@ class AppRouted extends React.Component {
           return '';
         }
     }
-  
+
     // ReturnInfo(){
     //   return '';
     // }
-  
+
     render(){
           return(
               <div className="container">
@@ -343,9 +344,9 @@ class AppRouted extends React.Component {
                 <this.AfterInput/>
                 </div>
             </div>
-  
+
           );
       }
   }
 
-  export default AppRouted
+  export default AddSite

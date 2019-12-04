@@ -10,7 +10,7 @@ class MainPage extends React.Component{
     this.state = {
       forism: {},
     };
-  
+
   axios.get('http://localhost:5000/forism/')
       .then((res) => {
         this.setState({
@@ -33,8 +33,7 @@ class MainPage extends React.Component{
         <blockquote className="blockquote">
                   <p ><cite title="Source Title">{this.state.forism.quoteText}</cite></p>
                     <footer>
-                      <p v-if="forism.quoteAuthor">Автор :
-                        <cite title="Source Title">{this.state.forism.quoteAuthor}</cite>
+                      <p v-if="forism.quoteAuthor">Автор : <cite title="Source Title">{''+this.state.forism.quoteAuthor}</cite>
                       </p>
                     </footer>
                 </blockquote>
