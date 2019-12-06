@@ -2,6 +2,7 @@ import Select from 'react-select';
 import React from 'react';
 import axios from 'axios';
 import jsonp from 'jsonp';
+import config from './config';
 
 class AddSite extends React.Component {
 
@@ -39,7 +40,7 @@ class AddSite extends React.Component {
 
 
 
-      axios.get('http://localhost:5000/guestUser/')
+      axios.get(`${config.flask}/guestUser/`)
         .then((res)=>{
           this.setState({
             token: res.data.token,
@@ -161,7 +162,7 @@ class AddSite extends React.Component {
     }
 
     RegionLoad(){
-      axios.get('http://localhost:5000/regions-child/', { params: { q:''} })
+      axios.get(`${config.flask}/regions-child/`, { params: { q:''} })
         .then((res) => {
             this.setState({
               allRegions: res.data.regions
@@ -187,7 +188,7 @@ class AddSite extends React.Component {
       })
 
 
-      const path = 'http://localhost:5000/streets/';
+      const path = `${config.flask}/streets/`;
       axios.get(path, { params: { street:  e.value} })
         .then((res) => {
           this.setState({street: res.data.street})

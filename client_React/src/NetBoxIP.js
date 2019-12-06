@@ -1,7 +1,7 @@
 import Select from 'react-select';
 import React from 'react';
 import axios from 'axios';
-
+import config from './config';
 
 class AddIp extends React.Component{
   constructor(props){
@@ -20,7 +20,7 @@ class AddIp extends React.Component{
       IP:false,
     }
 
-    axios.get('http://localhost:5000/guestUser/')
+    axios.get(`${config.flask}/guestUser/`)
         .then((res)=>{
           this.setState({
             token: res.data.token,
@@ -131,23 +131,29 @@ class AddIp extends React.Component{
   ReturnPrefixes(){
 
     return(
-      <Select
-      options={this.state.AvailablePrefixes}
-      id = "SelectPrefix"
-      isSearchable={false}
-      onChange = {this.getAvailableIp}
-      maxMenuHeight='200'/>
+      <div className="container">
+        <label for="SelectPrefix">Prefix:</label>
+          <Select
+            options={this.state.AvailablePrefixes}
+            id = "SelectPrefix"
+            isSearchable={false}
+            onChange = {this.getAvailableIp}
+            maxMenuHeight='200'/>
+      </div>
     )
   }
 
   ReturnIp(){
     return(
-      <Select
-      options={this.state.AvailableIp}
-      id = "SelectPrefix"
-      isSearchable={false}
-      onChange = {this.SelectIp}
-      maxMenuHeight='200'/>
+      <div className="container">
+        <label for="SelectIP">Available Ip:</label>
+          <Select
+            options={this.state.AvailableIp}
+            id = "SelectIP"
+            isSearchable={false}
+            onChange = {this.SelectIp}
+            maxMenuHeight='200'/>
+      </div>
     )
   }
 

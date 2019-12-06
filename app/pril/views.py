@@ -140,5 +140,5 @@ def getForism():
 @app.route('/guestUser/', methods=['GET'])
 @cross_origin()
 def GetGuest():
-    return jsonify({'token': config.GUEST_VUE_TOKEN, 'url': config.NETBOX_URL, })
+    return jsonify({'token': config.TOKEN, 'url': config.NETBOX_URL, })
 

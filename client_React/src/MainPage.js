@@ -1,6 +1,7 @@
 import logo from './assets/n_logo.png';
 import axios from 'axios';
 import React from 'react';
+import config from './config';
 
 class MainPage extends React.Component{
   constructor(props){
@@ -11,7 +12,7 @@ class MainPage extends React.Component{
       forism: {},
     };
 
-  axios.get('http://localhost:5000/forism/')
+  axios.get(`${config.flask}/forism/`)
       .then((res) => {
         this.setState({
           forism: res.data.forism

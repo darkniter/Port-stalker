@@ -9,6 +9,8 @@
 .history
 *.json
 !package.json
+config.json
+!config-example.json
 config.py
 test.py
 *.csv
