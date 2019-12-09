@@ -1,7 +1,5 @@
 FROM node:12.13.0
 
-# Create app directory
-WORKDIR /src
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
