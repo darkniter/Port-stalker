@@ -6,5 +6,4 @@ prometheus_flask_exporter
 pytest==3.0.6
 pynetbox
 flask_cors
-
-
+transliterate
