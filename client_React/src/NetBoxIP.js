@@ -1,7 +1,7 @@
 import Select from 'react-select';
 import React from 'react';
 import axios from 'axios';
-import config from './config';
+import config from './config.json';
 
 class AddIp extends React.Component{
   constructor(props){

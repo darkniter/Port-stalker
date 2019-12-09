@@ -2,7 +2,7 @@ import Select from 'react-select';
 import React from 'react';
 import axios from 'axios';
 import jsonp from 'jsonp';
-import config from './config';
+import config from './config.json';
 
 class AddSite extends React.Component {
 

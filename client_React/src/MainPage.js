@@ -1,7 +1,7 @@
 import logo from './assets/n_logo.png';
 import axios from 'axios';
 import React from 'react';
-import config from './config';
+import config from './config.json';
 
 class MainPage extends React.Component{
   constructor(props){
