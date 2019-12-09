@@ -17,5 +17,3 @@ services:
       - "8030:3000"
     volumes:
       - "./config_react.json-example:/client_React/src/config.json"
-  noda:
-    image:
