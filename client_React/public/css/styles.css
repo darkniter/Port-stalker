@@ -35,3 +35,7 @@ img.menu{
 .nav_button.NetBox:hover {
     color: #5eb2ff;
 }
+.list-group.KLADR{
+    overflow: auto;
+    max-height: 200;
+}

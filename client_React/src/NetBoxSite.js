@@ -42,7 +42,7 @@ class AddSite extends React.Component {
 
 
       axios.get(`${config.flask}/guestUser/`)
-        .then((res)=>{
+        .then((res) => {
           this.setState({
             token: res.data.token,
             NetBox_URL: res.data.url,
@@ -146,6 +146,7 @@ class AddSite extends React.Component {
 
     }
 
+
     StreetPreProcessor(element){
       var StreetArr = '';
       if (element.type === 'дом') {
@@ -183,14 +184,14 @@ class AddSite extends React.Component {
       })
     }
 
-    onSelectStreet(e){
+    onSelectStreet=event=>{
       this.setState({
-        inputStrPlaces: e.value,
+        inputStrPlaces: event.target.value,
       })
 
 
       const path = `${config.flask}/streets/`;
-      axios.get(path, { params: { street:  e.value} })
+      axios.get(path, { params: { street:  event.target.value} })
         .then((res) => {
           this.setState({street: res.data.street})
         })
@@ -221,62 +222,89 @@ class AddSite extends React.Component {
       if (this.state.inputStrReg.label && this.state.inputForm) {
         if (this.state.street.slug){
           return(
-            <div>
-              <label htmlFor="inputSearch">Search Site : </label>
-                <div className="input-group mb-3">
+            <div className="col-md-6">
+              <label htmlFor = "inputSearch">Search Site : </label>
+                <div className = "input-group mb-3">
                   <input
-                    id="inputSearch"
-                    className="form-control"
-                    type="text"
-                    value={this.state.searchPlacesStr}
-                    onChange={this.getStreetList}
+                    id = "inputSearch"
+                    className = "form-control"
+                    type = "text"
+                    value = {this.state.searchPlacesStr}
+                    onChange = {this.getStreetList}
                   />
                 </div>
 
-              <div className="col-md-6">
-                <input type="button" className="btn btn-outline-secondary" value="Show me data" onClick={this.ReverseStateForm}/>
-              </div>
-
                 <div>
-                  <label htmlFor="SelectStreetFIAS">Site in Kladr : </label>
+          <label htmlFor="SelectStreetFIAS">Site in Kladr : {this.state.inputStrPlaces}</label>
+                    <ul data-spy="scroll" className = 'list-group KLADR col-md-auto'>
+                      {this.state.StreetsList.map((index)=>{
+                      return (
+                      <li>
+                        <input
+                          type="button"
+                          class="list-group-item list-group-item-action"
+                          value = {index.value}
+                          onClick={this.onSelectStreet}
+                          />
+                      </li>)
+                      })}
+                    </ul>
+                  {/* <label htmlFor = "SelectStreetFIAS">Site in Kladr : </label>
                     <Select
                       id = "SelectStreetFIAS"
-                      defaultMenuIsOpen={true}
-                      closeMenuOnSelect={false}
-                      isSearchable={false}
+                      defaultMenuIsOpen = {true}
+                      closeMenuOnSelect = {false}
+                      isSearchable = {false}
                       options = {this.state.StreetsList}
                       onChange = {this.onSelectStreet}
-                      maxMenuHeight='200'
-                    />
+                      maxMenuHeight = '200'
+                    /> */}
                 </div>
+
+              <input type = "button" className = "btn btn-outline-secondary" value = "Show me data" onClick = {this.ReverseStateForm}/>
 
             </div>
         );
         } else {
             return(
               <div>
-                <label htmlFor="inputSearch">Search Site : </label>
-                <div className="input-group mb-3">
+                <label htmlFor = "inputSearch">Search Site : </label>
+                <div className = "input-group mb-3">
                   <input
-                    id="inputSearch"
-                    className="form-control"
-                    type="text"
-                    value={this.state.searchPlacesStr}
-                    onChange={this.getStreetList}
+                    id = "inputSearch"
+                    className = "form-control"
+                    type = "text"
+                    value = {this.state.searchPlacesStr}
+                    onChange = {this.getStreetList}
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="SelectStreetFIAS">Site in Kladr : </label>
-                    <Select
+                  <label htmlFor="SelectStreetFIAS">Site in Kladr : {this.state.inputStrPlaces}</label>
+                    <ul data-spy="scroll" className = 'list-group KLADR col-md-auto'>
+                      {this.state.StreetsList.map((index)=>{
+                      return (
+                      <li>
+                        <input
+                          type="button"
+                          class="list-group-item list-group-item-action"
+                          value = {index.value}
+                          onClick={this.onSelectStreet}
+                          />
+                      </li>)
+                      })}
+                    </ul>
+                    {/* <Select
                       id = "SelectStreetFIAS"
-                      menuIsOpen={true}
-                      closeMenuOnSelect={false}
-                      isSearchable={false}
+                      defaultMenuIsOpen = {true}
+                      menuIsOpen = {true}
+                      closeMenuOnSelect = {false}
+                      isSearchable = {false}
+                      isFocused = {true}
                       options = {this.state.StreetsList}
                       onChange = {this.onSelectStreet}
-                      maxMenuHeight='200'
-                    />
+                      maxMenuHeight = '200'
+                    /> */}
                 </div>
               </div>
             );
@@ -289,8 +317,14 @@ class AddSite extends React.Component {
     ReturnRegions(){
       if(this.state.inputForm){
         return(
-        <div className="reg_select">
-          <label htmlFor="SelectReg">Region : </label><Select maxMenuHeight='200' id="SelectReg" options={this.state.allRegions} onChange={this.onSelectRegion}></Select>
+        <div className = "reg_select">
+          <label htmlFor = "SelectReg">Region : </label>
+          <Select
+          maxMenuHeight = '200'
+          id = "SelectReg"
+          options ={this.state.allRegions}
+          onChange = {this.onSelectRegion}
+          />
         </div>
         )} else {
           return '';
@@ -303,7 +337,7 @@ class AddSite extends React.Component {
           <div>
 
               <h3>Created Object : </h3>
-              <table className="col-md-6 table-striped">
+              <table className = "col-md-6 table-striped">
                 <tbody>
                   <tr><td>Region Name :</td><td> {this.state.inputStrReg.label}</td></tr>
                   <tr><td>Selected address : </td><td>{this.state.inputStrPlaces}</td></tr>
@@ -317,13 +351,13 @@ class AddSite extends React.Component {
                   <table className="col-md-6 table-striped"><tbody>
                   {
                     Object.keys(this.state.inputStrReg.value).map((item)=>{
-                          return <tr key={item}><td>{String(item)} :</td><td> {this.state.inputStrReg.value[item]} </td></tr>
+                          return <tr key = {item}><td>{String(item)} :</td><td> {this.state.inputStrReg.value[item]} </td></tr>
                         })
                   }</tbody></table>
               </div>
               <br/>
-              <input type='button' className="btn btn-dark" value='Back to form' onClick={this.ReverseStateForm} />
-            <input type='button' className="btn btn-danger" value='Send to NetBox' onClick={this.SendNetbox} />
+              <input type = 'button' className = "btn btn-dark" value = 'Back to form' onClick = {this.ReverseStateForm} />
+            <input type = 'button' className = "btn btn-danger" value = 'Send to NetBox' onClick = {this.SendNetbox} />
           </div>
         );
       } else {
@@ -337,8 +371,8 @@ class AddSite extends React.Component {
 
     render(){
           return(
-              <div className="container">
-                <div className="col-md-6" align="left">
+              <div className = "container">
+                <div className = "col-md-6" align="left">
                   <this.ReturnRegions/>
                   <this.ReturnStreetsList/>
                   {/* <this.ReturnInfo/> */}
