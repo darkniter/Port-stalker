@@ -1,6 +1,6 @@
 FROM node:12.13.0
 
-WORKDIR client_React
+WORKDIR /client_React
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied

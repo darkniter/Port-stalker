@@ -6,7 +6,7 @@ services:
     ports:
       - "8080:5000"
     volumes:
-      - "./config.py:/app/pril/config.py"
+      - "./config_flask.py:/app/pril/config.py"
   redis:
     image: redis
     restart: always
@@ -16,4 +16,4 @@ services:
     ports:
       - "8030:3000"
     volumes:
-      - "./config.json:/client_React/src/config.json"
+      - "./config_react.json:/client_React/src/config.json"
