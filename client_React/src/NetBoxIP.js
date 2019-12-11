@@ -92,10 +92,9 @@ class AddIp extends React.Component{
     }
 
   renameObjIp(objIp){
-    objIp['value'] = objIp['family'];
-      delete objIp['family'];
-      objIp['label'] = objIp['address'];
-      delete objIp['address'];
+    objIp['value'] = objIp['address'];
+    objIp['label'] = objIp['address'];
+    delete objIp['address'];
     return objIp;
   }
 
@@ -132,7 +131,7 @@ class AddIp extends React.Component{
 
     return(
       <div className="container">
-        <label for="SelectPrefix">Prefix:</label>
+        <label htmlFor="SelectPrefix">Prefix:</label>
           <Select
             options={this.state.AvailablePrefixes}
             id = "SelectPrefix"
@@ -146,7 +145,7 @@ class AddIp extends React.Component{
   ReturnIp(){
     return(
       <div className="container">
-        <label for="SelectIP">Available Ip:</label>
+        <label htmlFor="SelectIP">Available Ip:</label>
           <Select
             options={this.state.AvailableIp}
             id = "SelectIP"

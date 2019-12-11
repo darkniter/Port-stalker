@@ -11,6 +11,7 @@ class AddSite extends React.Component {
       super(props)
 
       this.state = {
+        searchPlacesStr:'',
         inputStrPlaces: '',
         StreetsList: [],
         StreetVal: '',
@@ -90,7 +91,7 @@ class AddSite extends React.Component {
     getStreetList = event =>{
       let q = event.target.value
       this.setState({
-        inputStrPlaces: q,
+        searchPlacesStr: q,
       })
       if (q){
       const path = 'https://kladr-api.ru/api.php';
@@ -221,27 +222,27 @@ class AddSite extends React.Component {
         if (this.state.street.slug){
           return(
             <div>
-              <label for="inputSearch">Search Site : </label>
+              <label htmlFor="inputSearch">Search Site : </label>
                 <div className="input-group mb-3">
                   <input
                     id="inputSearch"
                     className="form-control"
                     type="text"
-                    value={this.state.inputStrPlaces}
+                    value={this.state.searchPlacesStr}
                     onChange={this.getStreetList}
                   />
                 </div>
 
-              <div className="input-group-append">
+              <div className="col-md-6">
                 <input type="button" className="btn btn-outline-secondary" value="Show me data" onClick={this.ReverseStateForm}/>
               </div>
 
                 <div>
-                  <label for="SelectStreetFIAS">Site in Kladr : </label>
+                  <label htmlFor="SelectStreetFIAS">Site in Kladr : </label>
                     <Select
                       id = "SelectStreetFIAS"
                       defaultMenuIsOpen={true}
-                      closeMenuOnSelect={true}
+                      closeMenuOnSelect={false}
                       isSearchable={false}
                       options = {this.state.StreetsList}
                       onChange = {this.onSelectStreet}
@@ -254,22 +255,23 @@ class AddSite extends React.Component {
         } else {
             return(
               <div>
-                <label for="inputSearch">Search Site : </label>
+                <label htmlFor="inputSearch">Search Site : </label>
                 <div className="input-group mb-3">
                   <input
                     id="inputSearch"
                     className="form-control"
                     type="text"
-                    value={this.state.inputStrPlaces}
+                    value={this.state.searchPlacesStr}
                     onChange={this.getStreetList}
                   />
                 </div>
 
                 <div>
-                  <label for="SelectStreetFIAS">Site in Kladr : </label>
+                  <label htmlFor="SelectStreetFIAS">Site in Kladr : </label>
                     <Select
                       id = "SelectStreetFIAS"
                       menuIsOpen={true}
+                      closeMenuOnSelect={false}
                       isSearchable={false}
                       options = {this.state.StreetsList}
                       onChange = {this.onSelectStreet}
@@ -287,7 +289,7 @@ class AddSite extends React.Component {
     ReturnRegions(){
       if(this.state.inputForm){
         return(
-        <div>
+        <div className="reg_select">
           <label htmlFor="SelectReg">Region : </label><Select maxMenuHeight='200' id="SelectReg" options={this.state.allRegions} onChange={this.onSelectRegion}></Select>
         </div>
         )} else {
