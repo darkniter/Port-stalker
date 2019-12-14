@@ -218,116 +218,66 @@ class AddSite extends React.Component {
     }
 
     ReturnStreetsList(){
-
-      if (this.state.inputStrReg.label && this.state.inputForm) {
-        if (this.state.street.slug){
-          return(
-            <div className="col-md-6">
-              <label htmlFor = "inputSearch">Search Site : </label>
-                <div className = "input-group mb-3">
-                  <input
-                    id = "inputSearch"
-                    className = "form-control"
-                    type = "text"
-                    value = {this.state.searchPlacesStr}
-                    onChange = {this.getStreetList}
-                  />
-                </div>
-
-                <div>
-          <label htmlFor="SelectStreetFIAS">Site in Kladr : {this.state.inputStrPlaces}</label>
-                    <ul data-spy="scroll" className = 'list-group KLADR col-md-auto'>
-                      {this.state.StreetsList.map((index)=>{
-                      return (
-                      <li>
-                        <input
-                          type="button"
-                          class="list-group-item list-group-item-action"
-                          value = {index.value}
-                          onClick={this.onSelectStreet}
-                          />
-                      </li>)
-                      })}
-                    </ul>
-                  {/* <label htmlFor = "SelectStreetFIAS">Site in Kladr : </label>
-                    <Select
-                      id = "SelectStreetFIAS"
-                      defaultMenuIsOpen = {true}
-                      closeMenuOnSelect = {false}
-                      isSearchable = {false}
-                      options = {this.state.StreetsList}
-                      onChange = {this.onSelectStreet}
-                      maxMenuHeight = '200'
-                    /> */}
-                </div>
-
-              <input type = "button" className = "btn btn-outline-secondary" value = "Show me data" onClick = {this.ReverseStateForm}/>
-
-            </div>
-        );
-        } else {
-            return(
+      if(this.state.inputForm){
+    return(
               <div>
                 <label htmlFor = "inputSearch">Search Site : </label>
-                <div className = "input-group mb-3">
+                <div className = "input-group ">
                   <input
                     id = "inputSearch"
                     className = "form-control"
                     type = "text"
+                    disabled={(!this.state.inputStrReg.value)?true:false}
                     value = {this.state.searchPlacesStr}
                     onChange = {this.getStreetList}
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="SelectStreetFIAS">Site in Kladr : {this.state.inputStrPlaces}</label>
+                  <label>Selected Site : {this.state.inputStrPlaces}</label><br/>
+                  <label>Finded sites in KLADR:</label>
                     <ul data-spy="scroll" className = 'list-group KLADR col-md-auto'>
                       {this.state.StreetsList.map((index)=>{
                       return (
-                      <li>
+                      <li key = {index.label}>
                         <input
                           type="button"
-                          class="list-group-item list-group-item-action"
+                          className="list-group-item list-group-item-action"
                           value = {index.value}
                           onClick={this.onSelectStreet}
                           />
                       </li>)
                       })}
                     </ul>
-                    {/* <Select
-                      id = "SelectStreetFIAS"
-                      defaultMenuIsOpen = {true}
-                      menuIsOpen = {true}
-                      closeMenuOnSelect = {false}
-                      isSearchable = {false}
-                      isFocused = {true}
-                      options = {this.state.StreetsList}
-                      onChange = {this.onSelectStreet}
-                      maxMenuHeight = '200'
-                    /> */}
                 </div>
+                <input type = "button" disabled={(!this.state.inputStrPlaces)?true:false} className = "btn btn-outline-secondary" value = "Show me data" onClick = {this.ReverseStateForm}/>
               </div>
             );
-        }
-      } else{
-        return '';
-        }
+          } else {
+             return '';
+          }
     }
+     
 
     ReturnRegions(){
       if(this.state.inputForm){
+        
         return(
         <div className = "reg_select">
           <label htmlFor = "SelectReg">Region : </label>
           <Select
-          maxMenuHeight = '200'
-          id = "SelectReg"
-          options ={this.state.allRegions}
-          onChange = {this.onSelectRegion}
+            value={this.state.inputStrReg}
+            id = "SelectReg"
+            options ={this.state.allRegions}
+            onChange = {this.onSelectRegion}
+
           />
         </div>
-        )} else {
-          return '';
+        )
+        
+        
+      } else {
+          return ''
         }
     }
 
@@ -370,9 +320,11 @@ class AddSite extends React.Component {
     // }
 
     render(){
+      if (this.state.allRegions.label!=='' && this.state.token){
           return(
               <div className = "container">
                 <div className = "col-md-6" align="left">
+                  
                   <this.ReturnRegions/>
                   <this.ReturnStreetsList/>
                   {/* <this.ReturnInfo/> */}
@@ -383,7 +335,10 @@ class AddSite extends React.Component {
             </div>
 
           );
-      }
+      } else {
+        return (<div className="col-md-6"><h1>Connection with server failed. Please find the problem in config, Flask or Netbox</h1></div>);
+        }
   }
+}
 
   export default AddSite

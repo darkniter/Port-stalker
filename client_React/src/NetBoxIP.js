@@ -9,8 +9,8 @@ class AddIp extends React.Component{
     super(props)
 
     this.state = {
-      SelectedIp: '',
-      SelectedPrefix: '',
+      SelectedIp: {},
+      SelectedPrefix: {},
       AvailablePrefixes: [],
       AvailableIp: [],
       token: '',
@@ -135,7 +135,7 @@ class AddIp extends React.Component{
           <Select
             options={this.state.AvailablePrefixes}
             id = "SelectPrefix"
-            isSearchable={false}
+            isSearchable={true}
             onChange = {this.getAvailableIp}
             maxMenuHeight='200'/>
       </div>
@@ -147,40 +147,28 @@ class AddIp extends React.Component{
       <div className="container">
         <label htmlFor="SelectIP">Available Ip:</label>
           <Select
+            disabled={this.state.AvailableIp.label?false:true}
             options={this.state.AvailableIp}
             id = "SelectIP"
-            isSearchable={false}
+            isSearchable={true}
             onChange = {this.SelectIp}
             maxMenuHeight='200'/>
+          <input type="button" disabled={this.state.SelectedIp.label?false:true} className="btn btn-outline-secondary" value = "Send to NetBox" onClick={this.SendIpAddress}/>
       </div>
     )
   }
 
   traceback(){
-    if (this.state.IP && this.state.Pref){
+    if(this.state.AvailablePrefixes && this.state.token){
       return (
-        <div className='container'>
+        <div className='col-md-6'>
           <this.ReturnPrefixes/>
           <this.ReturnIp/>
-          <input type="button" value = "Send to NetBox" onClick={this.SendIpAddress}/>
         </div>
-        )
-
-    } else if (this.state.Pref){
-        return (
-          <div className='container'>
-            <this.ReturnPrefixes/>
-            <this.ReturnIp/>
-          </div>
         );
-
       } else {
-          return (
-            <div className='container'>
-              <this.ReturnPrefixes/>
-            </div>
-          );
-        }
+        return (<div className="col-md-6"><h1>Connection with server failed. Please find the problem in config, Flask or Netbox</h1></div>);
+      }
   }
 
   AfterInput(){
