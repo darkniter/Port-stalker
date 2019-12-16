@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import config from './config.json';
+import qString from 'query-string';
 
 class PortStalker extends React.Component{
     constructor(props){
@@ -14,11 +15,27 @@ class PortStalker extends React.Component{
         this.AfterInput = this.AfterInput.bind(this)
         this.ResponseTable = this.ResponseTable.bind(this)
 
+        if (this.props.location.search!==''){
+            let IpParams = qString.parse(this.props.location.search).ip
+            axios.get(`${config.flask}/api/v1/PortStalker/`, { params: {ip: IpParams}})
+        .then((res)=>{
+            this.setState({dataDevice:res.data, formMode: false})
+        })
+        .catch((error) => {
+            // if (typeof error.response.data == 'string'){
+            //     alert(error.response.data)
+            //   } else{
+            //       for (let item in error.response.data){
+            //         alert(error.response.data[item]);
+            //       }}
+            console.error(error);
+          });
+        }
     }
 
     RequestPortStalker(){
         let inputIp = document.getElementById('InputFormIp').value
-        
+
         axios.get(`${config.flask}/api/v1/PortStalker/`,{ params: {ip: inputIp}})
         .then((res)=>{
             this.setState({dataDevice:res.data, formMode: false})
@@ -39,7 +56,7 @@ class PortStalker extends React.Component{
             <div className="input-group col-md-6">
                 <input className = "form-control" type="text" id="InputFormIp"/>
                 <input type="button" className="btn btn-outline-secondary" value="Find it !" onClick={this.RequestPortStalker}/>
-            </div>   
+            </div>
         );
     }
 
@@ -48,10 +65,10 @@ class PortStalker extends React.Component{
             console.log(this.state.dataDevice.header.length);
             if (this.state.dataDevice.header.length !== 0){
                 return(
-                    <table className="col-md-6 table-striped">
+                    <table className="table table-striped table-dark">
                         <tbody>
                             <tr>
-                                {Object.keys(this.state.dataDevice.header).map((head)=>{
+                                {(this.state.dataDevice.header).map((head)=>{
                                             return(
                                                 <th>{head}</th>
                                             )
@@ -59,10 +76,14 @@ class PortStalker extends React.Component{
                                     )
                                 }
                             </tr>
-                            {Object.keys(this.state.dataDevice.request_rows).map((Row,RowData)=>{
+                            {(this.state.dataDevice.request_rows).map((Row)=>{
+                                    return (<tr>{(this.state.dataDevice.header).map((head)=>{
                                             return(
-                                                <td>{Row[RowData]}</td>
+
+                                                    <td>{Row[head]}</td>
+
                                             )
+                                            })}</tr>)
                                         }
                                     )
                                 }
@@ -83,13 +104,13 @@ class PortStalker extends React.Component{
                     <br/>
                         <this.ResponseTable/>
                     <br/>
-                    <table className="table-striped">
+                    <table className="table table-striped table-dark">
                         <tbody>
                             <tr>
                                 <td>Device URL:</td>
-                                <td><a href={this.state.dataDevice.url_netbox}>{this.state.dataDevice.url_netbox}</a></td>
+                                <td><a className="stretched-link text-danger" href={this.state.dataDevice.url_netbox}>{this.state.dataDevice.url_netbox}</a></td>
                             </tr>
-                                
+
                             <tr>
                                 <td>Device Name : </td>
                                 <td>{this.state.dataDevice.dev_name}</td>

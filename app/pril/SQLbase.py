@@ -6,6 +6,8 @@ import json
 import datetime
 import hashlib
 from functools import lru_cache
+import re
+
 mysql = MySQL()
 
 mysql.init_app(app)
@@ -65,47 +67,47 @@ def redis_data_input(request_rows, header, ip, vendor, hashing_string):
 
 
 def request_SQL(ip, vendor):
-
+    vendor = re.sub(r'-','',vendor)
     request_rows = []
     header = []
     start = timer()
     hashing_string = hashing(ip, vendor)
     request_rows, header = redis_data_output(ip, vendor, hashing_string)
     time_flag = False
-    try:
-        if not header:
-            time_flag = True
+    # try:
+    if not header:
+        time_flag = True
 
-            cursor = mysql.connect().cursor(pymysql.cursors.DictCursor)
+        cursor = mysql.connect().cursor(pymysql.cursors.DictCursor)
 
-            config_sql = app.config.get_namespace('SQL_REQUEST_')
+        config_sql = app.config.get_namespace('SQL_REQUEST_')
 
-            if vendor in config_sql:
-                cursor.execute(config_sql[vendor] % ip)
-                request_rows = cursor.fetchall()
+        if vendor in config_sql:
+            cursor.execute(config_sql[vendor] % ip)
+            request_rows = cursor.fetchall()
 
-            else:
-                request_rows = []
+        else:
+            request_rows = []
 
-            cursor.close()
+        cursor.close()
 
-            desc = cursor.description
+        desc = cursor.description
 
-            if desc:
-                for row in desc:
-                    header.append(row[0])
-            header = tuple(header)
-            if len(request_rows) > 0:
-                redis_data_input(
-                    request_rows,
-                    header,
-                    ip,
-                    vendor,
-                    hashing_string
-                    )
-        stop = timer() - start
-        stop = float("{0:.4f}".format(stop))
-    except BaseException:
-        return [], 1, [], True
+        if desc:
+            for row in desc:
+                header.append(row[0])
+        header = tuple(header)
+        if len(request_rows) > 0:
+            redis_data_input(
+                request_rows,
+                header,
+                ip,
+                vendor,
+                hashing_string
+                )
+    stop = timer() - start
+    stop = float("{0:.4f}".format(stop))
+    # except BaseException:
+    #     return [], 1, [], True
 
     return request_rows, stop, header, time_flag
