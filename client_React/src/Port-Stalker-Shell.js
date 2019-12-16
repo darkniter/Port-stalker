@@ -70,17 +70,17 @@ class PortStalker extends React.Component{
                             <tr>
                                 {(this.state.dataDevice.header).map((head)=>{
                                             return(
-                                                <th>{head}</th>
+                                                <th key={head}>{head}</th>
                                             )
                                         }
                                     )
                                 }
                             </tr>
                             {(this.state.dataDevice.request_rows).map((Row)=>{
-                                    return (<tr>{(this.state.dataDevice.header).map((head)=>{
+                                    return (<tr key={Row['port']}>{(this.state.dataDevice.header).map((head)=>{
                                             return(
 
-                                                    <td>{Row[head]}</td>
+                                                    <td key={head}>{Row[head]}</td>
 
                                             )
                                             })}</tr>)
