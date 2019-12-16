@@ -238,16 +238,16 @@ class AddSite extends React.Component {
                   <label>Finded sites in KLADR:</label>
                     <ul data-spy="scroll" className = 'list-group KLADR col-md-auto'>
                       {this.state.StreetsList.map((index)=>{
-                      return (
-                      <li key = {index.label}>
-                        <input
-                          type="button"
-                          className="list-group-item list-group-item-action"
-                          value = {index.value}
-                          onClick={this.onSelectStreet}
-                          />
-                      </li>)
-                      })}
+                        return (
+                        <li key = {index.label}>
+                          <input
+                            type="button"
+                            className="list-group-item list-group-item-action"
+                            value = {index.value}
+                            onClick={this.onSelectStreet}
+                            />
+                        </li>)
+                        })}
                     </ul>
                 </div>
                 <input type = "button" disabled={(!this.state.inputStrPlaces)?true:false} className = "btn btn-outline-secondary" value = "Show me data" onClick = {this.ReverseStateForm}/>

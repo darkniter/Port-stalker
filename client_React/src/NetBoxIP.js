@@ -56,7 +56,14 @@ class AddIp extends React.Component{
 
         })
         .catch((error) => {
-          console.error(error);
+          console.log(typeof error.response.data);
+          if (typeof error.response.data == 'string'){
+            alert(error.response.data)
+          } else{
+              for (let item in error.response.data){
+                alert(error.response.data[item]);
+              }
+            }
         });
     }
 
@@ -100,7 +107,10 @@ class AddIp extends React.Component{
 
   SendIpAddress(){
       const path = `${this.state.NetBox_URL}/api/ipam/ip-addresses/`;
-      let messageIp = JSON.stringify({"address": this.state.SelectedIp.label})
+      let messageIp = JSON.stringify({
+        "address": this.state.SelectedIp.label,
+        // "vrf": 1
+      })
       axios.post(path,messageIp,{
         headers: {
           accept: 'application/json',
@@ -187,8 +197,10 @@ class AddIp extends React.Component{
 
   render(){
     return(
-      <this.traceback/>
-    );
+      <div className="container">
+        <this.traceback/>
+      </div>
+      );
 
   }
 }
