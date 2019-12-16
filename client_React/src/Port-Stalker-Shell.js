@@ -48,23 +48,25 @@ class PortStalker extends React.Component{
             console.log(this.state.dataDevice.header.length);
             if (this.state.dataDevice.header.length !== 0){
                 return(
-                    <table>
-                        <tr>
-                            {Object.keys(this.state.dataDevice.header).map((head)=>{
-                                        return(
-                                            <th>{head}</th>
-                                        )
-                                    }
-                                )
-                            }
-                        </tr>
-                        {Object.keys(this.state.dataDevice.request_rows).map((Row,RowData)=>{
-                                        return(
-                                            <td>{Row[RowData]}</td>
-                                        )
-                                    }
-                                )
-                            }
+                    <table className="col-md-6 table-striped">
+                        <tbody>
+                            <tr>
+                                {Object.keys(this.state.dataDevice.header).map((head)=>{
+                                            return(
+                                                <th>{head}</th>
+                                            )
+                                        }
+                                    )
+                                }
+                            </tr>
+                            {Object.keys(this.state.dataDevice.request_rows).map((Row,RowData)=>{
+                                            return(
+                                                <td>{Row[RowData]}</td>
+                                            )
+                                        }
+                                    )
+                                }
+                        </tbody>
                     </table>)
             } else {
                 return (<h3>В MySql базе - не найден</h3>)
@@ -81,14 +83,23 @@ class PortStalker extends React.Component{
                     <br/>
                         <this.ResponseTable/>
                     <br/>
-                    
-                    <h3>Device URL:</h3>
-                        <a href={this.state.dataDevice.url_netbox}>{this.state.dataDevice.url_netbox}</a>
-                    
-                    <h3>Device Name : </h3>
-                        <p>{this.state.dataDevice.dev_name}</p>
-                    <h3>Device Model : </h3>
-                        <p>{this.state.dataDevice.dev_model}</p>
+                    <table className="table-striped">
+                        <tbody>
+                            <tr>
+                                <td>Device URL:</td>
+                                <td><a href={this.state.dataDevice.url_netbox}>{this.state.dataDevice.url_netbox}</a></td>
+                            </tr>
+                                
+                            <tr>
+                                <td>Device Name : </td>
+                                <td>{this.state.dataDevice.dev_name}</td>
+                            </tr>
+                            <tr>
+                                <td>Device Model : </td>
+                                <td>{this.state.dataDevice.dev_model}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             )
         } else if (this.state.formMode){
