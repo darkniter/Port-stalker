@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import config from './config.json';
 import qString from 'query-string';
+import Loader from "./Loader";
 
 class PortStalker extends React.Component{
     constructor(props){
@@ -9,6 +10,8 @@ class PortStalker extends React.Component{
         this.state={
             formMode: true,
             dataDevice: {},
+            loader: false,
+            inputIp:' ',
         }
         this.ReturnInputIpForm = this.ReturnInputIpForm.bind(this)
         this.RequestPortStalker = this.RequestPortStalker.bind(this)
@@ -34,19 +37,22 @@ class PortStalker extends React.Component{
     }
 
     RequestPortStalker(){
+        this.setState({loader:true})
         let inputIp = document.getElementById('InputFormIp').value
-
+        this.setState({inputIp:inputIp})
         axios.get(`${config.flask}/api/v1/PortStalker/`,{ params: {ip: inputIp}})
         .then((res)=>{
-            this.setState({dataDevice:res.data, formMode: false})
+            this.setState({dataDevice:res.data, loader: false, formMode: false})
         })
         .catch((error) => {
-            // if (typeof error.response.data == 'string'){
-            //     alert(error.response.data)
-            //   } else{
-            //       for (let item in error.response.data){
-            //         alert(error.response.data[item]);
-            //       }}
+            this.setState({loader:false, dataDevice: false, formMode: false})
+            if (error.response){
+                if (typeof error.response.data == 'string'){
+                    alert(error.response.data)
+                } else{
+                    for (let item in error.response.data){
+                        alert(error.response.data[item]);
+                    }}}
             console.error(error);
           });
     }
@@ -54,7 +60,7 @@ class PortStalker extends React.Component{
     ReturnInputIpForm(){
         return(
             <div className="input-group col-md-6">
-                <input className = "form-control" type="text" id="InputFormIp"/>
+                <input className = "form-control" type="text" defaultValue={this.state.inputIp} id="InputFormIp"/>
                 <input type="button" className="btn btn-outline-secondary" value="Find it !" onClick={this.RequestPortStalker}/>
             </div>
         );
@@ -125,17 +131,23 @@ class PortStalker extends React.Component{
             )
         } else if (this.state.formMode){
             return (<div className="col-md-6"><h3>Введите IP-address устройства</h3></div>);
-        } else {
+        } else if(this.state.dataDevice){
             return (<div className="col-md-6"><h3>IP не найден</h3></div>);
+        } else {
+            return <h3>Ошибка подключения</h3>
         }
     }
     render(){
-        return(
-        <div className="container">
-            <this.ReturnInputIpForm/>
-            <this.AfterInput/>
-        </div>
-        );
+        if(this.state.loader){
+            return <Loader/>
+        } else {
+            return(
+            <div className="container">
+                <this.ReturnInputIpForm/>
+                <this.AfterInput/>
+            </div>
+            );
+        }
     }
 
 }

@@ -3,6 +3,7 @@ import React from 'react';
 import axios from 'axios';
 import jsonp from 'jsonp';
 import config from './config.json';
+import Loader from "./Loader";
 
 class AddSite extends React.Component {
 
@@ -18,12 +19,11 @@ class AddSite extends React.Component {
         inputStrReg: {},
         allRegions:{},
         street: {},
-
         inputForm: true,
         CountCheck: 0,
         NetboxResponse: null,
         checkSite: true,
-        token:'',
+        token: true,
         NetBox_URL:'',
       };
 
@@ -48,6 +48,7 @@ class AddSite extends React.Component {
             NetBox_URL: res.data.url,
           })
         }).catch((error) => {
+          this.setState({token: false})
           console.error(error);
         });
         this.RegionLoad()
@@ -257,11 +258,11 @@ class AddSite extends React.Component {
              return '';
           }
     }
-     
+
 
     ReturnRegions(){
       if(this.state.inputForm){
-        
+
         return(
         <div className = "reg_select">
           <label htmlFor = "SelectReg">Region : </label>
@@ -274,8 +275,8 @@ class AddSite extends React.Component {
           />
         </div>
         )
-        
-        
+
+
       } else {
           return ''
         }
@@ -320,14 +321,15 @@ class AddSite extends React.Component {
     // }
 
     render(){
-      if (this.state.allRegions.label!=='' && this.state.token){
+      if (this.state.token){
+        if (this.state.allRegions[0]){
           return(
               <div className = "container">
+
                 <div className = "col-md-6" align="left">
-                  
+
                   <this.ReturnRegions/>
                   <this.ReturnStreetsList/>
-                  {/* <this.ReturnInfo/> */}
                 </div>
                 <div>
                 <this.AfterInput/>
@@ -335,6 +337,7 @@ class AddSite extends React.Component {
             </div>
 
           );
+        } else {return (<Loader/>)}
       } else {
         return (<div className="col-md-6"><h1>Connection with server failed. Please find the problem in config, Flask or Netbox</h1></div>);
         }

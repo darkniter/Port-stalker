@@ -11,7 +11,7 @@ import re
 mysql = MySQL()
 
 mysql.init_app(app)
-redis_connect = redis.StrictRedis(**(app.config.get_namespace('REDIS_')))
+redis_connect = redis.StrictRedis(**(app.config.get_namespace('REDIS_')),db=0)
 
 
 @lru_cache()

@@ -2,7 +2,7 @@ import Select from 'react-select';
 import React from 'react';
 import axios from 'axios';
 import config from './config.json';
-
+import Loader from "./Loader";
 class AddIp extends React.Component{
   constructor(props){
 
@@ -13,7 +13,7 @@ class AddIp extends React.Component{
       SelectedPrefix: {},
       AvailablePrefixes: [],
       AvailableIp: [],
-      token: '',
+      token: false,
       NetBox_URL: false,
       NetBoxResponse: '',
       Pref:false,
@@ -28,6 +28,9 @@ class AddIp extends React.Component{
           })
           this.getAvailablePrefixes(res.data.url);
         }).catch((error) => {
+          this.setState({
+            token: true
+          })
           console.error(error);
         });
     this.SelectIp = this.SelectIp.bind(this)
@@ -169,14 +172,14 @@ class AddIp extends React.Component{
   }
 
   traceback(){
-    if(this.state.AvailablePrefixes && this.state.token){
+    if(this.state.AvailablePrefixes && typeof this.state.token =='string'){
       return (
         <div className='col-md-6'>
           <this.ReturnPrefixes/>
           <this.ReturnIp/>
         </div>
         );
-      } else {
+      } else if(typeof this.state.token =='boolean'){
         return (<div className="col-md-6"><h1>Connection with server failed. Please find the problem in config, Flask or Netbox</h1></div>);
       }
   }
@@ -196,11 +199,16 @@ class AddIp extends React.Component{
   }
 
   render(){
-    return(
+    if(this.state.token){
+      return(
       <div className="container">
         <this.traceback/>
       </div>
       );
+    } else {
+      return (<Loader/>)
+    }
+
 
   }
 }

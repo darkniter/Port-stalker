@@ -11,4 +11,4 @@ def init_app():
 
 app = init_app()
 
-from pril import forms, views, SQLbase
+from pril import forms, views, SQLbase, Kladr_driver
