@@ -4,10 +4,7 @@ import pril.config_kladr as config
 import hashlib
 import redis
 import datetime
-# from pril import app
 
-
-# redis_connect = redis.StrictRedis(**(app.config.get_namespace('REDIS_')), db=1)
 redis_connect = redis.StrictRedis(config.REDIS_HOST,config.REDIS_PORT, config.REDIS_DB, config.REDIS_PASSWORD)
 
 def Test(ListStreet):
@@ -17,7 +14,9 @@ def Test(ListStreet):
     return responses
 
 
-def main(address, cityId,force=False):
+def main(address, cityId, force=False):
+    if not cityId[0].isdigit():
+        cityId = config.FIAS_CODE[cityId]
     request_data={}
     hashing_string = hashing(address.upper(), cityId)
 
@@ -39,7 +38,7 @@ def FinderKladr(address,cityId):
     path = "https://kladr-api.ru/api.php"
     params = {
         'query': address,
-        'cityId': config.FIAS_CODE[cityId],
+        'cityId': cityId,
         'regionId':'5000000000000',
         'limit':'10',
         'contentType':'building',

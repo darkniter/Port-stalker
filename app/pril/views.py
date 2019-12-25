@@ -79,12 +79,13 @@ def Kladr_search():
 
     if address and cityId :
         if force:
-            Kladr_driver.main(address, cityId, force)
+            response = Kladr_driver.main(address, cityId, force)
         else:
-            Kladr_driver.main(address, cityId)
+            response = Kladr_driver.main(address, cityId)
     else:
         return make_response('Can`t find neded arguments',400)
 
+    return response
 
 @app.route('/api/v1/PortStalker/', methods=['GET'])
 @cross_origin()
