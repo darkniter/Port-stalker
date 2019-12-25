@@ -1,6 +1,6 @@
 import requests
 import json
-import config_kladr as config
+import pril.config_kladr as config
 import hashlib
 import redis
 import datetime
@@ -17,7 +17,7 @@ def Test(ListStreet):
     return responses
 
 
-def main(address='', cityId='oz',force=False):
+def main(address, cityId,force=False):
     request_data={}
     hashing_string = hashing(address.upper(), cityId)
 
@@ -35,7 +35,7 @@ def main(address='', cityId='oz',force=False):
     return json.dumps(request_data)
 
 
-def FinderKladr(address='',cityId='oz'):
+def FinderKladr(address,cityId):
     path = "https://kladr-api.ru/api.php"
     params = {
         'query': address,
@@ -94,5 +94,5 @@ if __name__ == "__main__":
     "Бабушкина 2",
     ]
 
-    for item in Main(name):
+    for item in Test(name):
         print(item)

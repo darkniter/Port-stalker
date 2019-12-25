@@ -10,8 +10,8 @@
 *.json
 !package.json
 config.json
-config_kladr.py
 !config-example.json
+config_kladr.py
 config.py
 test.py
 *.csv

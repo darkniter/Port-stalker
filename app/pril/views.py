@@ -1,5 +1,5 @@
-from pril import app, forms, SQLbase
-from flask import render_template, request, jsonify
+from pril import app, forms, SQLbase, Kladr_driver
+from flask import render_template, request, jsonify, make_response
 from prometheus_flask_exporter import PrometheusMetrics, Gauge
 import json
 import pril.config as config
@@ -69,6 +69,21 @@ def reply():
 # def radius_api():
 #     # query_arr = request.args(args)
 #     return '200'
+
+
+@app.route('/api/v1/Kladr/', methods=['GET'])
+def Kladr_search():
+    address = request.args.get('address')
+    cityId = request.args.get('cityId')
+    force = request.args.get('force')
+
+    if address and cityId :
+        if force:
+            Kladr_driver.main(address, cityId, force)
+        else:
+            Kladr_driver.main(address, cityId)
+    else:
+        return make_response('Can`t find neded arguments',400)
 
 
 @app.route('/api/v1/PortStalker/', methods=['GET'])
