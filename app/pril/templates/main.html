@@ -5,6 +5,7 @@
 {% if not access %}
 {%if time%}
   {%if url_netbox%}
+  <h3>Finded in NetBox:</h3>
   <a href="{{url_netbox}}">{{dev_name_netbox}}</a>
   {{dev_model_netbox}}
   {% endif %}

@@ -1,11 +1,11 @@
-import React from 'react';
-
 import ReactDOM from 'react-dom';
-import AppRouted from './NetBox';
+import AddSite from './NetBoxSite';
 import Header from './Header';
-
+import React from 'react'
 import { BrowserRouter,Switch, Route } from 'react-router-dom';
 import MainPage from './MainPage';
+import AddIp from './NetBoxIP';
+import PortStalker from './Port-Stalker-Shell';
 
 
 
@@ -13,8 +13,9 @@ const Main = () => (
   <main>
     <Switch>
       <Route exact path='/' component={MainPage}/>
-      <Route path='/NetBox' component={AppRouted}/>
-      {/* <Route path='/schedule' component={STALKER}/> */}
+      <Route path='/NetBoxSite' component={AddSite}/>
+      <Route path='/NetBoxIp' component={AddIp}/>
+      <Route path='/PortStalker' component = {PortStalker}/>
     </Switch>
   </main>
 )

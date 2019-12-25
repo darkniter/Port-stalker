@@ -9,6 +9,9 @@
 .history
 *.json
 !package.json
+config.json
+config_kladr.py
+!config-example.json
 config.py
 test.py
 *.csv

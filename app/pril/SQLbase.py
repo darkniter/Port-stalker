@@ -6,10 +6,12 @@ import json
 import datetime
 import hashlib
 from functools import lru_cache
+import re
+
 mysql = MySQL()
 
 mysql.init_app(app)
-redis_connect = redis.StrictRedis(**(app.config.get_namespace('REDIS_')))
+redis_connect = redis.StrictRedis(**(app.config.get_namespace('REDIS_')),db=0)
 
 
 @lru_cache()
@@ -65,14 +67,14 @@ def redis_data_input(request_rows, header, ip, vendor, hashing_string):
 
 
 def request_SQL(ip, vendor):
-
+    vendor = re.sub(r'-','',vendor)
     request_rows = []
     header = []
     start = timer()
     hashing_string = hashing(ip, vendor)
     request_rows, header = redis_data_output(ip, vendor, hashing_string)
     time_flag = False
-
+    # try:
     if not header:
         time_flag = True
 
@@ -105,5 +107,7 @@ def request_SQL(ip, vendor):
                 )
     stop = timer() - start
     stop = float("{0:.4f}".format(stop))
+    # except BaseException:
+    #     return [], 1, [], True
 
     return request_rows, stop, header, time_flag

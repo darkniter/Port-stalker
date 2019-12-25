@@ -1,6 +1,7 @@
 import logo from './assets/n_logo.png';
 import axios from 'axios';
 import React from 'react';
+import config from './config.json';
 
 class MainPage extends React.Component{
   constructor(props){
@@ -10,8 +11,8 @@ class MainPage extends React.Component{
     this.state = {
       forism: {},
     };
-  
-  axios.get('http://localhost:5000/forism/')
+
+  axios.get(`${config.flask}/forism/`)
       .then((res) => {
         this.setState({
           forism: res.data.forism
@@ -33,8 +34,7 @@ class MainPage extends React.Component{
         <blockquote className="blockquote">
                   <p ><cite title="Source Title">{this.state.forism.quoteText}</cite></p>
                     <footer>
-                      <p v-if="forism.quoteAuthor">Автор :
-                        <cite title="Source Title">{this.state.forism.quoteAuthor}</cite>
+                      <p v-if="forism.quoteAuthor">Автор : <cite title="Source Title">{''+this.state.forism.quoteAuthor}</cite>
                       </p>
                     </footer>
                 </blockquote>

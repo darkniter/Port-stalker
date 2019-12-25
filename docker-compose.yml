@@ -1,12 +1,19 @@
 version: '3'
 services:
-  darkniter_flask:
+  port_stalker:
     build: app
     restart: always
     ports:
       - "8080:5000"
     volumes:
-      - "./config.py-example:/app/pril/config.py"
+      - "./config_flask.py:/app/pril/config.py"
   redis:
     image: redis
     restart: always
+  lady_of_the_winds:
+    build: client_React
+    restart: always
+    ports:
+      - "8030:3000"
+    volumes:
+      - "./config_react.json:/client_React/src/config.json"

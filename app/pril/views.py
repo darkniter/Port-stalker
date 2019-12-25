@@ -71,8 +71,34 @@ def reply():
 #     return '200'
 
 
-@app.route('/api/v1/radius/', methods=['GET'])
+@app.route('/api/v1/PortStalker/', methods=['GET'])
+@cross_origin()
 def radius_api():
+    response_json = {}
+    ip = request.args.get('ip')
+
+    if ip:
+        device_netbox = get_device(ip)
+        if device_netbox.ip:
+            if device_netbox.device.device_role.slug.find('switch') != -1:
+                response = SQLbase.request_SQL(ip, device_netbox.vendor_name)
+                response_json = {
+                    "request_rows": response[0],
+                    "header": response[2]
+                    }
+                response_json.update(
+                    {
+                        "url_netbox": config.NETBOX_URL + '/dcim/devices/{}'.format(device_netbox.dev_id),
+                        "dev_name": device_netbox.device.display_name,
+                        "dev_model": device_netbox.device.device_type.model,
+                    }
+                )
+
+    return jsonify(response_json)
+
+
+@app.route('/api/v1/radius/', methods=['GET'])
+def radius_api_Stalker():
     response_json = {}
     ip = request.args.get('ip')
 
@@ -83,7 +109,7 @@ def radius_api():
                 response = SQLbase.request_SQL(ip, device_netbox.vendor_name)
                 response_json = json.dumps(response[0])
 
-    return response_json
+    return jsonify(response_json)
 
 
 @app.route('/ping', methods=['GET'])
@@ -140,5 +166,5 @@ def getForism():
 @app.route('/guestUser/', methods=['GET'])
 @cross_origin()
 def GetGuest():
-    return jsonify({'token': config.GUEST_VUE_TOKEN, 'url': config.NETBOX_URL, })
+    return jsonify({'token': config.TOKENUSER, 'url': config.NETBOX_URL, })
 
