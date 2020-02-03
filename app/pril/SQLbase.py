@@ -44,6 +44,13 @@ def redis_data_output(ip, vendor, hashing_string):
     return request_rows, header
 
 
+def datetime_handler(x):
+    if isinstance(x, datetime.datetime):
+        print(x, str (x))
+        return x.isoformat()
+    raise TypeError("Unknown type")
+
+
 def redis_data_input(request_rows, header, ip, vendor, hashing_string):
     redis_array = (header, request_rows)
     next_day = (
@@ -55,9 +62,17 @@ def redis_data_input(request_rows, header, ip, vendor, hashing_string):
             second=0,
             microsecond=0
             )
+    # redis_connect.set(
+    #     hashing_string,
+    #     json.dumps(redis_array),
+    #     ex=(next_day-datetime.datetime.now()).seconds
+    #     )
     redis_connect.set(
         hashing_string,
-        json.dumps(redis_array),
+        json.dumps(
+            redis_array,
+            default=datetime_handler
+            ),
         ex=(next_day-datetime.datetime.now()).seconds
         )
 
@@ -96,7 +111,9 @@ def request_SQL(ip, vendor):
         if desc:
             for row in desc:
                 header.append(row[0])
+
         header = tuple(header)
+
         if len(request_rows) > 0:
             redis_data_input(
                 request_rows,
