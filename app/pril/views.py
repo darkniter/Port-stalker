@@ -71,19 +71,38 @@ def reply():
 #     return '200'
 
 
-@app.route('/api/v1/Kladr/', methods=['GET'])
-def Kladr_search():
+@app.route('/api/v1/Kladr/building', methods=['GET'])
+def Kladr_search_building():
+
+    building = request.args.get('building')
+    streetId = request.args.get('streetId')
+    cityId = request.args.get('cityId')
+    force = request.args.get('force')
+
+    if building and cityId:
+        if force:
+            response = Kladr_driver.building(cityId, building, streetId, force)
+        else:
+            response = Kladr_driver.building(cityId, building, streetId, force)
+    else:
+        return make_response('Can`t find neded arguments', 400)
+
+    return response
+
+
+@app.route('/api/v1/Kladr/street', methods=['GET'])
+def Kladr_search_street():
     address = request.args.get('address')
     cityId = request.args.get('cityId')
     force = request.args.get('force')
 
     if address and cityId :
         if force:
-            response = Kladr_driver.main(cityId, address, force)
+            response = Kladr_driver.street(cityId, address, force)
         else:
-            response = Kladr_driver.main(cityId, address)
+            response = Kladr_driver.street(cityId, address)
     else:
-        return make_response('Can`t find neded arguments',400)
+        return make_response('Can`t find neded arguments', 400)
 
     return response
 

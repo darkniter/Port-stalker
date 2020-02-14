@@ -12,13 +12,13 @@ redis_connect = redis.StrictRedis(config.REDIS_HOST,config.REDIS_PORT, config.RE
 
 def Test(ListStreet, cityId):
 
-    main_tmp = partial(main,cityId)
+    main_tmp = partial(street,cityId)
     responses = list(map(main_tmp, ListStreet))
 
     return responses
 
 @lru_cache(2000)
-def main(cityId, address, force=False):
+def street(cityId, address, force=False):
     if not cityId[0].isdigit():
         cityId = config.FIAS_CODE[cityId.lower()]
     request_data={}
@@ -28,7 +28,7 @@ def main(cityId, address, force=False):
         request_data, header = redis_data_output(address, cityId, hashing_string)
 
     if len(request_data)==0:
-        request_data_tmp = FinderKladr(address, cityId)
+        request_data_tmp = FinderKladr_street(address, cityId)
         redis_data_input(request_data_tmp.text, hashing_string)
         header='Kladr'
         request_data = request_data_tmp.text
@@ -38,16 +38,40 @@ def main(cityId, address, force=False):
     print(request_data['header_base'],request_data['searchContext'])
     return json.dumps(request_data)
 
+
+@lru_cache(2000)
+def building(cityId, building, streetId, force=False):
+    if not cityId[0].isdigit():
+        cityId = config.FIAS_CODE[cityId.lower()]
+    request_data={}
+    hashing_string = hashing(building+streetId, cityId)
+
+    if not force:
+        request_data, header = redis_data_output(building.upper()+streetId, cityId, hashing_string)
+
+    print(building,streetId)
+
+    if len(request_data)==0:
+        request_data_tmp = FinderKladr_building(building, streetId, cityId)
+        redis_data_input(request_data_tmp.text, hashing_string)
+        header='Kladr'
+        request_data = request_data_tmp.text
+
+    request_data = json.loads(request_data)
+    request_data.update({'header_base':header})
+    print(request_data['header_base'],request_data['searchContext'])
+    return json.dumps(request_data)
+
+
 @timecall
-def FinderKladr(address,cityId):
+def FinderKladr_street(address,cityId):
     path = "https://kladr-api.ru/api.php"
     params = {
         'query': address,
         'cityId': cityId,
         'regionId':'5000000000000',
         'limit':'10',
-        'contentType':'building',
-        'oneString':'1',
+        'contentType':'street',
         'withParent':'1',
         }
 
@@ -55,6 +79,26 @@ def FinderKladr(address,cityId):
     response_tmp = requests.get(path, params=params)
 
     return response_tmp
+
+
+@timecall
+def FinderKladr_building(building, streetId, cityId):
+    path = "https://kladr-api.ru/api.php"
+    params = {
+        'query': building,
+        'cityId': cityId,
+        'streetId': streetId,
+        'regionId':'5000000000000',
+        'limit':'10',
+        'contentType':'building',
+        'withParent':'1',
+        }
+
+
+    response_tmp = requests.get(path, params=params)
+
+    return response_tmp
+
 
 def hashing(address, cityId):
     s = ':'.join([address, cityId])

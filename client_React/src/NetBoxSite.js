@@ -12,7 +12,8 @@ class AddSite extends React.Component {
       super(props)
 
       this.state = {
-        searchPlacesStr:'',
+        searchPlacesStr: '',
+        searchPlacesStr_house:'',
         inputStrPlaces: '',
         StreetsList: [],
         StreetVal: '',
@@ -31,6 +32,8 @@ class AddSite extends React.Component {
       this.onSelectRegion = this.onSelectRegion.bind(this)
       this.ReturnStreetsList = this.ReturnStreetsList.bind(this)
       this.getStreetList = this.getStreetList.bind(this)
+      this.getBuildingsList = this.getBuildingsList.bind(this)
+      this.Cleared = this.Cleared.bind(this)
 
       this.ReturnRegions = this.ReturnRegions.bind(this)
       this.SendNetbox = this.SendNetbox.bind(this)
@@ -101,8 +104,7 @@ class AddSite extends React.Component {
                 cityId: this.state.inputStrReg.value.region_code,
                 regionId: 5000000000000,
                 limit: 10,
-                contentType: 'building',
-                oneString: 1,
+                contentType: 'street',
                 callback: 'Fias',
                 withParent: 1,
       },), { name: 'Fias'}, (error, data) => {
@@ -113,7 +115,47 @@ class AddSite extends React.Component {
               }
             });
       }
+    }
+
+
+    getBuildingsList = event =>{
+      let q = event.target.value
+      this.setState({
+        searchPlacesStr: q,
+      })
+      let params_dict = {
+                query: q,
+                cityId: this.state.inputStrReg.value.region_code,
+                streetId: this.state.inputStrPlaces,
+                regionId: 5000000000000,
+                limit: 10,
+                contentType: 'building',
+                callback: 'Fias',
+                withParent: 1,
       }
+      if (document.getElementById('Village_check').value) {
+        params_dict = {
+                query: q,
+                cityId: this.state.inputStrReg.value.region_code,
+                regionId: 5000000000000,
+                limit: 10,
+                contentType: 'building',
+                callback: 'Fias',
+                withParent: 1,
+      }
+      }
+      if (q){
+      const path = 'https://kladr-api.ru/api.php';
+      jsonp(this.UrlBuilder(path, params_dict ,), { name: 'Fias'}, (error, data) => {
+              if (error) {
+                console.error(error);
+              } else {
+                this.FormatDict(data);
+              }
+            });
+      }
+    }
+
 
     UrlBuilder(path, params) {
         let UrlString = '';
@@ -173,7 +215,7 @@ class AddSite extends React.Component {
           })
         .catch((error) => {
           this.setState({
-            allRegions: {label:'',value:''}
+            allRegions: {label:'', value:''}
           });
           console.error(error);
         });
@@ -188,6 +230,7 @@ class AddSite extends React.Component {
     onSelectStreet=event=>{
       this.setState({
         inputStrPlaces: event.target.value,
+        searchPlacesStr: event.target.value,
       })
 
 
@@ -199,6 +242,11 @@ class AddSite extends React.Component {
         .catch((error) => {
           console.error(error);
         });
+    }
+    Cleared(){
+      if (this.state.searchPlacesStr === ""){
+        this.setState({inputStrPlaces: ''})
+      }
     }
 
     ReverseStateForm(){
@@ -222,19 +270,31 @@ class AddSite extends React.Component {
       if(this.state.inputForm){
     return(
               <div>
-                <label htmlFor = "inputSearch">Search Site : </label>
+                <label htmlFor = "inputSearchStreet">Search Site : </label>
                 <div className = "input-group ">
                   <input
-                    id = "inputSearch"
+                    id = "inputSearchStreet"
                     className = "form-control"
                     type = "text"
                     disabled={(!this.state.inputStrReg.value)?true:false}
+                    onBlur={this.Cleared}
                     value = {this.state.searchPlacesStr}
+                    onChange = {this.getStreetList}
+                  />
+                  <input
+                    id = "inputSearchHouse"
+                    className = "form-control"
+                    type = "text"
+                    disabled={(!this.state.inputStrPlaces)?true:false}
+                    value = {this.state.searchPlacesStr_house}
                     onChange = {this.getStreetList}
                   />
                 </div>
 
                 <div>
+                  <label> It's village (</label>
+                  <input id = "Village_check" type="checkbox"/>)
+                  <br/>
                   <label>Selected Site : {this.state.inputStrPlaces}</label><br/>
                   <label>Finded sites in KLADR:</label>
                     <ul data-spy="scroll" className = 'list-group KLADR col-md-auto'>
