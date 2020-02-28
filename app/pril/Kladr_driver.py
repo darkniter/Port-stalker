@@ -44,7 +44,7 @@ def building(cityId, building, streetId, force=False):
     if not cityId[0].isdigit():
         cityId = config.FIAS_CODE[cityId.lower()]
     request_data={}
-    hashing_string = hashing(building+streetId, cityId)
+    hashing_string = hashing(building.upper() + streetId, cityId)
 
     if not force:
         request_data, header = redis_data_output(building.upper()+streetId, cityId, hashing_string)
