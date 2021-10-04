@@ -6,7 +6,7 @@ import pynetbox
 from functools import lru_cache
 
 
-net_box = pynetbox.api(config.NETBOX_URL, config.TOKEN)
+# net_box = pynetbox.api(config.NETBOX_URL, config.TOKEN)
 
 
 class dev_netbox():

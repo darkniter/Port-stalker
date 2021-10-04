@@ -8,7 +8,7 @@ import datetime
 from functools import partial, lru_cache
 from profilehooks import timecall
 
-redis_connect = redis.StrictRedis(config.REDIS_HOST,config.REDIS_PORT, config.REDIS_DB, config.REDIS_PASSWORD)
+# redis_connect = redis.StrictRedis(config.REDIS_HOST,config.REDIS_PORT, config.REDIS_DB, config.REDIS_PASSWORD)
 
 def Test(ListStreet, cityId):
 
