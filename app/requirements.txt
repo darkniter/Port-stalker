@@ -9,3 +9,4 @@ flask_cors
 transliterate
 marshmallow<4,>=3
 apispec[yaml]<4,>=3.3
+profilehooks
